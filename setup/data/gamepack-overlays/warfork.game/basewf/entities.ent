@@ -1,0 +1,1825 @@
+<?xml version="1.0"?>
+<!--
+ Warfork entity definition file for NetRadiant
+ Converted from the legacy entities.def (v1.2, 16/04/2023) to modern .ent XML.
+ Entity keys cross-checked against the Warfork source and the makebsp mapper
+ documentation; media paths verified against the current basewf packages.
+-->
+<classes>
+
+<!--
+=============================================================================
+
+ WORLDSPAWN ENTITY
+
+=============================================================================
+-->
+
+  <group name="worldspawn" color="0 0 0">
+The world. All brushes not inside another entity belong to worldspawn.
+If you see this, the currently selected brush is not part of an entity.
+-------- KEYS --------
+<string key="message" name="Message">Text printed at user logon; used as the level name.</string>
+<sound key="music" name="Music File">Looping sound file used for level music (eg. music/sonic5.wav).</sound>
+<real key="gravity" name="Gravity">Level gravity (default 800).</real>
+<texture key="colorCorrection" name="Color Correction LUT">Global color correction LUT for the level.</texture>
+-------- LIGHTING KEYS --------
+<real key="ambient" name="Ambient Light">Constant macro-ambient occlusion light intensity (default 0). Discouraged: it flattens light/shade variation.</real>
+<color key="_color" name="Ambient Color">Global ambient color (default 1 1 1). Legacy unprefixed color is also accepted by makebsp.</color>
+<color key="ambient_sky" name="Sky Ambient Color">Sky-facing ambient color; overrides color for upward surfaces.</color>
+<string key="shading" name="Angular Shading Model">halflambert (Warfork default), lambert, quadratic, doublequadratic, unreal.</string>
+<string key="attenuation" name="Falloff Model">standard (default), soft, linear, unreal, smoothstep.</string>
+<string key="exposurefilter" name="Exposure Filter">softknee, reinhard (default), filmic, linear/off.</string>
+<real key="saturation" name="Saturation">Global lightmap saturation multiplier (Warfork default 1.5).</real>
+<string key="saturationramp" name="Saturation Curve">filmic, power, halfpower, midtone, off.</string>
+<real key="cutoff" name="Cutoff Anchor">Auto-scaled cutoff budget for the reference light (profile default 1.0).</real>
+<real key="energycutoff" name="Absolute Energy Cutoff">Absolute energy cull threshold (0 = auto-scaling).</real>
+<real key="fadeout" name="Fade Out">Fraction of light reach used for a soft fade (profile default 0.05).</real>
+<real key="backsplashspot" name="Spot Backsplash">Default spotlight backsplash fraction (0..1).</real>
+<real key="backsplashsurface" name="Surface Backsplash">Default surface-light backsplash fraction (0..1).</real>
+<texture key="haloshader" name="Default Halo Shader">Default light halo shader (halo); "none" or "0" disables.</texture>
+-------- AMBIENT OCCLUSION / LIGHTGRID KEYS --------
+<real key="ambient_testradius" name="AO Test Radius">Occlusion test radius in world units (Warfork default 320, min 32).</real>
+<real key="ambient_gatheradius" name="AO Gather Radius">Light-probe gather radius (Warfork default 900, min 32).</real>
+<real key="ambient_gridscale" name="AO Grid Scale">Multiplier on MAO contribution to the lightgrid (default 1).</real>
+<real key="ambient_gridmaxluma" name="AO Grid Max Luma">Per-component luma ceiling on MAO grid contribution (profile default 72, 0 disables).</real>
+<real key="grid_smoothambient" name="Ambient Grid Smoothing">Ambient lightgrid smoothing radius (Warfork default 320; 0 disables).</real>
+<integer key="grid_smoothambient_passes" name="Ambient Smooth Passes">Ambient grid smoothing passes (Warfork default 4).</integer>
+<real key="grid_smoothdirect" name="Direct Grid Smoothing">Direct lightgrid smoothing radius (Warfork default 128).</real>
+<integer key="grid_smoothdirect_passes" name="Direct Smooth Passes">Direct grid smoothing passes (Warfork default 3).</integer>
+<real key="grid_clamp_minambient" name="Min Ambient Grid Luma">Final ambient grid luma floor, percent of 255 x hdr8BitScale (0 = off).</real>
+<real key="grid_clamp_maxambient" name="Max Ambient Grid Luma">Final ambient grid luma ceiling (0 = off).</real>
+<real key="grid_clamp_maxdirect" name="Max Direct Grid Luma">Final direct grid luma ceiling (0 = off).</real>
+<real key="grid_ambientscale" name="Grid Ambient Scale">Map-wide default per-light grid ambient multiplier (default 1).</real>
+<real key="grid_directscale" name="Grid Direct Scale">Map-wide default per-light grid direct multiplier (default 1.75).</real>
+<integer3 key="gridsize" name="Lightgrid Size">Lightgrid cell size X Y Z (legacy default 128 128 256). 0 disables the grid.</integer3>
+<real key="_lightingIntensity" name="LDR Lighting Intensity">Fixed scale for 8-bit lightmap/grid output (profile default 3.0).</real>
+-------- LIGHTMAP KEYS --------
+<real key="samplesize" name="Lightmap Sample Size">Global lightmap sample size in game units (profile default 4).</real>
+<boolean key="deluxe" name="Deluxe Maps">Generate deluxe/direction maps (on by default for qfusion).</boolean>
+<real key="deluxe_minangle" name="Deluxe Min Angle">Deluxe blend minimum angle, 0..90 (profile default 15).</real>
+<real key="supersample" name="Supersample Radius">Global supersampling trace radius (0 = off).</real>
+<real key="smooth" name="Lightmap Smooth Radius">Global lightmap smoothing radius (default 0.35; 0 disables).</real>
+<integer key="smoothpasses" name="Lightmap Smooth Passes">Lightmap smoothing passes (default 4).</integer>
+<integer key="antialiasing" name="Antialiasing Passes">Global antialiasing passes (default 0).</integer>
+-------- RADIOSITY KEYS --------
+<real key="radiosity" name="Bounce Light Intensity">Radiosity bounce intensity (1.0 default; 0 disables).</real>
+<real key="rad_color_ratio" name="Bounce Color Ratio">How much texture color tints bounce light (default 1).</real>
+<integer key="rad_interval" name="Radiosity Interval">Voxelization interval, power of 2 (default 4).</integer>
+<real key="rad_ao_intensity" name="Radiosity AO">Small-scale crease AO strength, 0..1 (profile default 0.5).</real>
+<real key="rad_ao_min" name="Radiosity AO Fade Start">AO fade start distance (default 0).</real>
+<real key="rad_ao_max" name="Radiosity AO Fade End">AO fade end distance (profile default 24).</real>
+<real key="rad_gridscale" name="Bounce Grid Scale">Bounce-light multiplier into the ambient grid (profile default 1.5).</real>
+-------- GEOMETRY / BSP KEYS --------
+<real key="blocksize" name="BSP Block Size">BSP splitting block size (default 1024). Legacy _blocksize is also accepted.</real>
+<boolean key="enforcesamplesize" name="Enforce Sample Size">Force brush subdivision to honour samplesize (on by default).</boolean>
+<boolean key="patchtris" name="Patch To Trisoup">Cook all world Bezier patches to triangle soup (CLI -patchtris wins).</boolean>
+<real key="chamfer_convexwidth" name="Convex Chamfer Width">Global convex-edge chamfer width (profile default 1.25).</real>
+<real key="chamfer_concavewidth" name="Concave Chamfer Width">Global concave-edge chamfer width (default 0).</real>
+<real key="trisoup_subdivide" name="Trisoup Subdivide">Fallback patch-flattening tolerance (profile default 6.0).</real>
+<real key="areascale" name="Area Light Scale">Map-wide area-light intensity scale (default 1).</real>
+<real key="directscale" name="Direct Light Scale">Map-wide direct-light intensity scale (default 1).</real>
+<boolean key="castshadows" name="World Shadow Casting">Whether the world casts shadows (default 1). Alias: cs.</boolean>
+-------- COMPILER KEYS (informational) --------
+<boolean key="_keeplights" name="Keep Light Entities">Keep light entities in the BSP; Warfork needs this set to 1 for realtime lights.</boolean>
+<string key="_makebsp_profile" name="makebsp Profile">Injected by makebsp: name of the profile used for this compile.</string>
+<string key="_makebsp_version" name="makebsp Version">Injected by makebsp: compiler version string.</string>
+-------- NOTES --------
+makebsp keys are case-insensitive and ignore a single leading underscore; the profile in makebspdata/warfork.json supplies the defaults listed above. Command-line switches override worldspawn keys.
+  </group>
+
+
+<!--
+=============================================================================
+
+ WEAPON_* ENTITIES
+
+=============================================================================
+-->
+
+  <point name="weapon_machinegun" color="1 0 .5" box="-16 -16 -16 16 16 48" model="models/weapons/machinegun/machinegun.md3">
+Machinegun
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="weapon_riotgun" color="1 0 .5" box="-16 -16 -16 16 16 48" model="models/weapons/riotgun/riotgun.md3">
+Riot Gun
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+The amount of time it takes for an item in the team to respawn is determined by the "wait" value of the item that was picked up previously. So if one of the items in the team has it's "wait" key set to -1 (never respawn), the random respawning cycle of the teamed items will stop after that item is picked up.
+In Warfork, "wait" will be understood only as delay for spawning the item once the map starts. Respawn item times depend on the gametype and can't be selected by the mapper.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="weapon_grenadelauncher" color="1 0 .5" box="-16 -16 -16 16 16 48" model="models/weapons/glauncher/glauncher.md3">
+Grenade Launcher
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+The amount of time it takes for an item in the team to respawn is determined by the "wait" value of the item that was picked up previously. So if one of the items in the team has it's "wait" key set to -1 (never respawn), the random respawning cycle of the teamed items will stop after that item is picked up.
+In Warfork, "wait" will be understood only as delay for spawning the item once the map starts. Respawn item times depend on the gametype and can't be selected by the mapper.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="weapon_rocketlauncher" color="1 0 .5" box="-16 -16 -16 16 16 48" model="models/weapons/rlauncher/rlauncher.md3">
+Rocket Launcher
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+The amount of time it takes for an item in the team to respawn is determined by the "wait" value of the item that was picked up previously. So if one of the items in the team has it's "wait" key set to -1 (never respawn), the random respawning cycle of the teamed items will stop after that item is picked up.
+In Warfork, "wait" will be understood only as delay for spawning the item once the map starts. Respawn item times depend on the gametype and can't be selected by the mapper.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="weapon_plasmagun" color="1 0 .5" box="-16 -16 -16 16 16 48" model="models/weapons/plasmagun/plasmagun.md3">
+Plasma Gun
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+The amount of time it takes for an item in the team to respawn is determined by the "wait" value of the item that was picked up previously. So if one of the items in the team has it's "wait" key set to -1 (never respawn), the random respawning cycle of the teamed items will stop after that item is picked up.
+In Warfork, "wait" will be understood only as delay for spawning the item once the map starts. Respawn item times depend on the gametype and can't be selected by the mapper.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="weapon_electrobolt" color="1 0 .5" box="-16 -16 -16 16 16 48" model="models/weapons/electrobolt/electrobolt.md3">
+ElectroBolt
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+The amount of time it takes for an item in the team to respawn is determined by the "wait" value of the item that was picked up previously. So if one of the items in the team has it's "wait" key set to -1 (never respawn), the random respawning cycle of the teamed items will stop after that item is picked up.
+In Warfork, "wait" will be understood only as delay for spawning the item once the map starts. Respawn item times depend on the gametype and can't be selected by the mapper.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="weapon_lasergun" color="1 0 .5" box="-16 -16 -16 16 16 48" model="models/weapons/lasergun/lasergun.md3">
+Lasergun
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+The amount of time it takes for an item in the team to respawn is determined by the "wait" value of the item that was picked up previously. So if one of the items in the team has it's "wait" key set to -1 (never respawn), the random respawning cycle of the teamed items will stop after that item is picked up.
+In Warfork, "wait" will be understood only as delay for spawning the item once the map starts. Respawn item times depend on the gametype and can't be selected by the mapper.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+
+<!--
+=============================================================================
+
+ AMMO_* ENTITIES
+
+=============================================================================
+-->
+
+  <point name="ammo_machinegun" color=".3 .3 1" box="-16 -16 -16 16 16 48" model="models/items/ammo/ammobox/ammobox.iqm">
+bullets
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="ammo_riotgun" color=".3 .3 1" box="-16 -16 -16 16 16 48" model="models/items/ammo/ammobox/ammobox.iqm">
+riotgun ammos
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="ammo_grenadelauncher" color=".3 .3 1" box="-16 -16 -16 16 16 48" model="models/items/ammo/ammobox/ammobox.iqm">
+grenade launcher ammos
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="ammo_rocketlauncher" color=".3 .3 1" box="-16 -16 -16 16 16 48" model="models/items/ammo/ammobox/ammobox.iqm">
+rocket launcher ammos
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="ammo_plasmagun" color=".3 .3 1" box="-16 -16 -16 16 16 48" model="models/items/ammo/ammobox/ammobox.iqm">
+plasma gun ammos
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="ammo_electrobolt" color=".3 .3 1" box="-16 -16 -16 16 16 48" model="models/items/ammo/ammobox/ammobox.iqm">
+electrobolt ammos
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="ammo_lasergun" color=".3 .3 1" box="-16 -16 -16 16 16 48" model="models/items/ammo/ammobox/ammobox.iqm">
+lasergun ammos
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+
+<!--
+=============================================================================
+
+ ITEM_* ENTITIES
+
+=============================================================================
+-->
+
+  <point name="item_armor_shard" color="0 .7 0" box="-16 -16 -16 16 16 48" model="models/items/armor/shard/shard.iqm">
+Armor Shard +5 (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_armor_ga" color="0 .7 0" box="-16 -16 -16 16 16 48" model="models/items/armor/ga/ga.iqm">
+Green Armor +50 (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_armor_ya" color="1 .75 .3" box="-16 -16 -16 16 16 48" model="models/items/armor/ya/ya.iqm">
+Yellow Armor +75 (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_armor_ra" color=".6 0 0" box="-16 -16 -16 16 16 48" model="models/items/armor/ra/ra.iqm">
+Red Armor +100 (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_health_small" color="0 1 0" box="-16 -16 -16 16 16 48" model="models/items/health/small/small_health.iqm">
+Small Health +5 (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_health_medium" color=".8 .8 0" box="-16 -16 -16 16 16 48" model="models/items/health/medium/medium_health.md3">
+Medium Health +25 (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_health_large" color="1 0 0" box="-16 -16 -16 16 16 48" model="models/items/health/large/large_health.md3">
+Large Health +50 (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_health_ultra" color="0 0 1" box="-16 -16 -16 16 16 48" model="models/items/health/ultra/ultra_health.md3">
+Ultra Health +100
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_health_mega" color="0 0 1" box="-16 -16 -16 16 16 48" model="models/items/health/mega/mega_health.md3">
+Mega Health +200 (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_quad" color=".4 .6 1" box="-16 -16 -16 16 16 48" model="models/powerups/instant/quad.md3">
+Quad Damage power-up multiplies the damage a player deals by 4 times (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="item_warshell" color=".4 .6 1" box="-16 -16 -16 16 16 48" model="models/powerups/instant/warshell_belt.md3">
+WarShell power-up decreases the damage a player takes by 4 times (updated: 16/04/2023)
+-------- KEYS --------
+<target key="target" name="Target">activating this entity will trigger any entity with this as targetname.</target>
+<targetname key="targetname" name="Target Name">name to use for targeting this entity.</targetname>
+<real key="wait" name="Delay">Time in seconds before the item first spawns after map start. Respawn times are controlled by the gametype and cannot be set by the mapper.</real>
+<string key="team" name="Team Name">set this to team items. Teamed items will respawn randomly after team master is picked up (see Notes).</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+In Warfork, the wait key only sets the initial spawn delay; respawn intervals depend on the gametype.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+
+<!--
+=============================================================================
+
+ FLAGS
+
+=============================================================================
+-->
+
+  <point name="team_CTF_alphaflag" color="0 .2 1" box="-16 -16 -16 16 16 48" model="models/objects/flag/flag_base.md3">
+Alpha team flag for CTF games.
+  </point>
+
+  <point name="team_CTF_betaflag" color="0 .2 1" box="-16 -16 -16 16 16 48" model="models/objects/flag/flag_base.md3">
+Beta team flag for CTF games.
+  </point>
+
+
+<!--
+=============================================================================
+
+ SPAWNPOINTS
+
+=============================================================================
+-->
+
+  <point name="info_player_start" color="1 0 0" box="-16 -16 -24 16 16 40">
+Player spawn location. Maps must have one of this, even when it's not used in multiplayer games. (updated: 12/08/2005)
+-------- KEYS --------
+<angle key="angle" name="Yaw Angle">direction in which player will look when spawning in the game.</angle>
+<target key="target" name="Target">this can point at a target_give entity for respawn freebies.</target>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+  </point>
+
+  <point name="info_player_deathmatch" color="1 0 1" box="-16 -16 -24 16 16 40">
+Multiplayer spawning location. (updated: 12/08/2005)
+-------- KEYS --------
+<angle key="angle" name="Yaw Angle">direction in which player will look when spawning in the game. Does not apply to bots.</angle>
+<target key="target" name="Target">this can point at a target_give entity for respawn freebies.</target>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+-------- NOTES --------
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="info_player_intermission" color="1 0 1" box="-16 -16 -16 16 16 16">
+Camera for intermission screen between matches. Can be aimed by setting the "angles" key or targeting an pointing to an aiming entity. Use only one per level. (updated: 12/08/2005)
+-------- KEYS --------
+<angles key="angles" name="Pitch Yaw Roll">sorted as pitch, yaw, roll.</angles>
+<target key="target" name="Target">point this to an info_notnull or target_position entity to set the camera's pointing angles.</target>
+-------- NOTES --------
+Use this entity as the cammera for the scoreboards view at end of matches. If this entity isn't in the map, a random info_player_deathmatch entity will be choosed in it's place, usually resulting in ugly views
+  </point>
+
+  <point name="team_CTF_alphaplayer" color="1 .2 0" box="-16 -16 -24 16 16 40">
+Initial Alpha team spawning position for CTF games. This is where players spawn when they join the Alpha team.
+-------- KEYS --------
+<target key="target" name="Target">this can point at a target_give entity for respawn freebies.</target>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+  </point>
+
+  <point name="team_CTF_alphaspawn" color="0 .2 1" box="-16 -16 -24 16 16 40">
+Alpha team respawning position for CTF games. This is where Alpha team players respawn after they get fragged.
+-------- KEYS --------
+<target key="target" name="Target">this can point at a target_give entity for respawn freebies.</target>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+  </point>
+
+  <point name="team_CTF_betaplayer" color="1 .2 0" box="-16 -16 -24 16 16 40">
+Initial Beta team spawning position for CTF games. This is where players spawn when they join the Beta team.
+-------- KEYS --------
+<target key="target" name="Target">this can point at a target_give entity for respawn freebies.</target>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+  </point>
+
+  <point name="team_CTF_betaspawn" color="0 .2 1" box="-16 -16 -24 16 16 40">
+Beta team respawning position for CTF games. This is where Beta team players respawn after they get fragged.
+-------- KEYS --------
+<target key="target" name="Target">this can point at a target_give entity for respawn freebies.</target>
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+  </point>
+
+
+<!--
+=============================================================================
+
+ FUNC_* ENTITIES
+
+=============================================================================
+-->
+
+  <group name="func_group" color="0 .5 .8">
+Editor utility for grouping world brushes and patches. The entity never reaches the game: its geometry is merged into worldspawn with per-surface overrides taken from this entity's keys.
+-------- KEYS --------
+<real key="smooth" name="Lightmap Smooth Radius">Lightmap smoothing radius for the group's surfaces (0 disables).</real>
+<color key="vertexcolor" name="Vertex Color">Override the vertex color.</color>
+<real key="vertexalpha" name="Vertex Alpha">Override opacity (0..1 or 0..255).</real>
+<boolean key="upscale" name="Upscale Raytracing">Raytrace these surfaces at 2x lightmap resolution.</boolean>
+<real key="supersample" name="Supersample Radius">Supersampling trace radius (0 = off).</real>
+<real key="samplesize" name="Lightmap Sample Size">Lightmap sample size override. Alias: lightmapsamplesize.</real>
+<boolean key="enforcesamplesize" name="Enforce Sample Size">Subdivide to honour the sample size.</boolean>
+<boolean key="castshadows" name="Cast Shadows">Cast shadows into the lightmap (default 1). Alias: cs.</boolean>
+<string key="modelgroup" name="Model Group">Bind misc_model entities with the same modelgroup.</string>
+<string key="decalgroup" name="Decal Group">Only decals with a matching decalgroup project here.</string>
+<real key="chamfer_convexwidth" name="Convex Chamfer Width">Per-entity convex-edge chamfer width.</real>
+<real key="chamfer_concavewidth" name="Concave Chamfer Width">Per-entity concave-edge chamfer width.</real>
+<boolean key="nosolid" name="Render Only">Render geometry without collision. Also nonsolid / collisiontype none.</boolean>
+-------- TERRAIN MODE (legacy) --------
+<boolean key="terrain" name="Terrain Mode">Set to 1 to treat this group as terrain.</boolean>
+<texture key="shader" name="Terrain MetaShader">Metashader used to assign terrain textures.</texture>
+<texture key="alphamap" name="Terrain Blending Map">Art file guiding texture blending on the terrain.</texture>
+<integer key="layers" name="Terrain Layers">Number of unique root shaders used by the terrain.</integer>
+-------- NOTES --------
+Use TAB to cycle through the component pieces of a selected func_group. For a dedicated terrain generator, use func_terrain instead.
+collisiontype none (also nonsolid) is accepted by the compiler for render-only brushes; it has no editor widget.
+  </group>
+
+  <group name="func_bobbing" color="0 .5 .8">
+Solid entity that oscillates back and forth in a linear motion. Entity bobs on the Z axis (up-down) by default. It can also emit sound if the "noise" key is set. Will crush the player when blocked. (updated: 12/08/2005)
+-------- KEYS --------
+<real key="speed" name="Speed">amount of time in seconds for one complete oscillation cycle (default 4).</real>
+<real key="height" name="Height">sets the amount of travel of the oscillation movement (default 32).</real>
+<real key="phase" name="Phase">sets the start offset of the oscillation cycle. Values must be 0 &lt; phase &lt; 1. Any integer phase value is the same as no offset (default 0).</real>
+<sound key="noise_start" name="Start Sound">start moving sound (default is silent)</sound>
+<sound key="noise" name="Sound File">path/name of .wav file to play (default is silent). Use looping sounds only (eg. sound/world/drone6.wav - See Notes).</sound>
+<sound key="noise_stop" name="Stop Sound">stop moving sound (default is silent)</sound>
+<model key="model2" name="Model File">path/name of model to include.</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of sound and .md3 model included with entity (See Notes).</real3>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="X_AXIS" name="X Axis" bit="0">Use/rotate around the X axis.</flag>
+<flag key="Y_AXIS" name="Y Axis" bit="1">Use/rotate around the Y axis.</flag>
+-------- NOTES --------
+In order for the sound to be emitted from the entity, it is recommended to include a brush with an origin shader at its center, otherwise the sound will not follow the entity as it moves. Setting the origin key is simply an alternate method to using an origin brush. When using the model2 key, the origin point of the model will correspond to the origin point defined by either the origin brush or the origin coordinate value.
+Start and stop sounds will only be played if the entity is set to be triggered
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_button" color="0 .5 .8">
+When a button is touched by a player, it moves in the direction set by the "angle" key, triggers all its targets, stays pressed by an amount of time set by the "wait" key, then returns to it's original position where it can be operated again. (updated: 12/08/2005)
+-------- KEYS --------
+<direction key="angle" name="Direction">determines the direction in which the button will move (up = -1, down = -2).</direction>
+<target key="target" name="Target">all entities with a matching targetname will be triggered.</target>
+<real key="speed" name="Speed">speed of button's displacement (default 40).</real>
+<real key="wait" name="Delay">Number of seconds the button stays pressed (default 3, -1 = return immediately).</real>
+<real key="lip" name="Lip">lip remaining at end of move (default 4 units).</real>
+<real key="health" name="Health">(default 0) if set to any non-zero value, the button must take damage (any amount) to activate.</real>
+<sound key="noise" name="Sound File">custom noise to be played when activated</sound>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of .md3 model included with entity (See Notes).</real3>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+Setting the origin key is simply an alternate method to using an origin brush. When using the model2 key, the origin point of the model will correspond to the origin point defined by either the origin brush or the origin coordinate value.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_door" color="0 .5 .8">
+Normal sliding door entity. By default, the door will activate when player walks close to it or when damage is inflicted to it. (updated: 12/08/2005)
+-------- KEYS --------
+<string key="message" name="Message">is printed when the door is touched if it is a trigger door and it hasn't been fired yet</string>
+<direction key="angle" name="Direction">determines the opening direction of door (up = -1, down = -2).</direction>
+<real key="speed" name="Speed">determines how fast the door moves (default 600).</real>
+<real key="wait" name="Delay">number of seconds before door returns (2 default, -1 = never return)</real>
+<real key="lip" name="Lip">lip remaining at end of move (default 8)</real>
+<targetname key="targetname" name="Target Name">if set, a func_button or trigger is required to activate the door.</targetname>
+<target key="target" name="Target">fire entities with this targetname when activated</target>
+<real key="health" name="Health">(default 0) if set to any non-zero value, the button must take damage (any amount) to activate.</real>
+<integer key="dmg" name="Damage">damage to inflict on player when he blocks operation of door (default 2). Door will reverse direction when blocked unless CRUSHER spawnflag is set.</integer>
+<string key="team" name="Team Name">assign the same team name to multiple doors that should operate together (see Notes).</string>
+<integer key="gameteam" name="Team Filter">makes the door only openable by a player of a specific team (0 = everyone, 1 = FFA players, 2 = alpha,  3 = beta)</integer>
+<sound key="noise_start" name="Start Sound">overrides default start moving sound</sound>
+<sound key="noise" name="Sound File">overrides default movement sound</sound>
+<sound key="noise_stop" name="Stop Sound">overrides default stop moving sound</sound>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of .md3 model included with entity (See Notes).</real3>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="START_OPEN" name="Start Open" bit="0">the door will spawn in the open state and operate in reverse.</flag>
+<flag key="CRUSHER" name="Crusher" bit="2">door will not reverse direction when blocked and will keep damaging player until he dies or gets out of the way.</flag>
+<flag key="NOMONSTER" name="Nomonster" bit="3">monsters will not trigger this door</flag>
+<flag key="TOGGLE" name="Toggle" bit="5">wait in both the start and end states for a trigger event</flag>
+-------- NOTES --------
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_pendulum" color="0 .5 .8">
+You need to have an origin brush as part of this entity. Solid entity that describes a pendulum back and forth rotation movement. Rotates on the X axis by default. Pendulum frequency is a physical constant based on the length of the beam and gravity. Blocking the pendulum instantly kills a player. (updated: 12/08/2005)
+-------- KEYS --------
+<angle key="angle" name="Yaw Angle">angle offset of axis of rotation from default X axis (default 0).</angle>
+<real key="speed" name="Speed">angle of swing arc in either direction from initial position (default 30).</real>
+<real key="phase" name="Phase">sets the start offset of the swinging cycle. Values must be 0 &lt; phase &lt; 1. Any integer phase value is the same as no offset (default 0).</real>
+<sound key="noise_start" name="Start Sound">start moving sound to be played only if triggered (default is silent)</sound>
+<sound key="noise" name="Sound File">path/name of .wav file to play. Use looping sounds only (default is silent).</sound>
+<sound key="noise_stop" name="Stop Sound">stop moving sound to be played only if triggered (default is silent)</sound>
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/jets/jets01.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of entity's rotation axis and .md3 model included with entity (default "0 0 0" - See Notes).</real3>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+You need to have an origin brush as part of this entity. The center of that brush will be the point through which the rotation axis passes. Setting the origin key is simply an alternate method to using an origin brush. Pendulum will rotate along the X axis by default. Very crude operation: pendulum cannot rotate along Z axis, the speed of swing (frequency) is not adjustable. When using the model2 key, the origin point of the model will correspond to the origin point defined by either the origin brush or the origin coordinate value. Pendulums always swing north / south on unrotated models. Add an angles field to the model to allow rotation in other directions. Pendulum frequency is a physical constant based on the length of the beam and gravity.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_plat" color="0 .5 .8">
+Rising platform the player can ride to reach higher places. Plats must always be drawn in the raised position, so they will operate and be lighted correctly but they spawn in the lowered position. The plat will stay in the raised position until the player steps off. (updated: 12/08/2005)
+-------- KEYS --------
+<real key="speed" name="Speed">How fast the platform moves (default 300).</real>
+<real key="accel" name="Accel">default 20</real>
+<real key="deccel" name="Deccel">default 20</real>
+<real key="lip" name="Lip">Lip remaining at the end of the move (default 8).</real>
+<real key="height" name="Height">if set, this will determine the total amount of vertical travel of the plat, instead of being implicitly assigned by the model's height.</real>
+<integer key="dmg" name="Damage">Damage inflicted when the platform blocks the player (default 2).</integer>
+<targetname key="targetname" name="Target Name">if set, the trigger that points to this will raise the plat each time it fires.</targetname>
+<sound key="noise_start" name="Start Sound">overrides default start moving sound</sound>
+<sound key="noise" name="Sound File">overrides default movement sound</sound>
+<sound key="noise_stop" name="Stop Sound">overrides default stop moving sound</sound>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of .md3 model included with entity (See Notes).</real3>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="LOW_TRIGGER" name="Low Trigger" bit="0">the plat is triggered from its lower side</flag>
+-------- NOTES --------
+By default, the total amount of vertical travel of a platform is implicitly determined by the overall vertical size of the brushes of which it's made minus the lip value. But if the "height" key is used, then the total amount of vertical travel of the plat will be exactly that value regardless of the shape and size of the plat and regardless of the value of the "lip" key. Using the "height" key is the best method for any kind of platforms and the only possible one for thin plats which need to travel vertical distances many times their own thickness. Setting the origin key is simply an alternate method to using an origin brush. When using the model2 key, the origin point of the model will correspond to the origin point defined by either the origin brush or the origin coordinate value.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_rotating" color="0 .5 .8">
+You need to have an origin brush as part of this entity.  The center of that brush will be
+the point around which it is rotated. It will rotate around the Z axis by default.  You can
+check either the X_AXIS or Y_AXIS box to change that. (updated: 12/08/2005)
+-------- KEYS --------
+<targetname key="targetname" name="Target Name">name to be targeted</targetname>
+<target key="target" name="Target">names to target.</target>
+<real key="speed" name="Speed">determines how fast entity rotates (default 100).</real>
+<sound key="noise_start" name="Start Sound">overrides default start moving sound</sound>
+<sound key="noise" name="Sound File">overrides default movement sound</sound>
+<sound key="noise_stop" name="Stop Sound">overrides default stop moving sound</sound>
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/bitch/fembotbig.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of entity's rotation axis and .md3 model included with entity (default "0 0 0" - See Notes).</real3>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="START_OFF" name="Start Off" bit="0">Start in the off state.</flag>
+<flag key="REVERSE" name="Reverse" bit="1">Reverse the normal direction of travel.</flag>
+<flag key="X_AXIS" name="X Axis" bit="2">Use/rotate around the X axis.</flag>
+<flag key="Y_AXIS" name="Y Axis" bit="3">Use/rotate around the Y axis.</flag>
+<flag key="TOUCH_PAIN" name="Touch Pain" bit="4">Damage players on contact.</flag>
+<flag key="STOP" name="Stop" bit="5">Stop rotating when touched.</flag>
+-------- NOTES --------
+You need to have an origin brush as part of this entity. The center of that brush will be the point through which the rotation axis passes. Setting the origin key is simply an alternate method to using an origin brush. It will rotate along the Z axis by default. You can check either the X_AXIS or Y_AXIS box to change that. When using the model2 key, the origin point of the model will correspond to the origin point defined by either the origin brush or the origin coordinate value.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_train" color="0 .5 .8">
+Trains are moving platforms that players can ride. The targets origin specifies the min point of the train at each corner. The train spawns at the first target it is pointing at. If the train is the target of a button or trigger, it will not begin moving until activated. (updated: 12/08/2005)
+-------- KEYS --------
+<real key="speed" name="Speed">speed of displacement of train (default 100).</real>
+<integer key="dmg" name="Damage">default 2</integer>
+<target key="target" name="Target">point to first entity in the path</target>
+<targetname key="targetname" name="Target Name">train's targetname</targetname>
+<sound key="noise_start" name="Start Sound">start moving sound (default silent)</sound>
+<sound key="noise" name="Sound File">movement sound (default silent)</sound>
+<sound key="noise_stop" name="Stop Sound">stop moving sound (default silent)</sound>
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of the train's brush(es) and .md3 model included with entity (See Notes).</real3>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="START_ON" name="Start On" bit="0"></flag>
+<flag key="TOGGLE" name="Toggle" bit="1"></flag>
+<flag key="BLOCK_STOPS" name="Block Stops" bit="2"></flag>
+-------- NOTES --------
+Setting the origin key is simply an alternate method to using an origin brush. When using the model2 key, the origin point of the model will correspond to the origin point defined by either the origin brush or the origin coordinate value.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_door_rotating" color="0 .5 .8">
+Door which opens by rotating in one axis. You need to have an origin brush as part of this entity. (updated: 12/08/2005)
+-------- KEYS --------
+<string key="message" name="Message">is printed when the door is touched if it is a trigger door and it hasn't been fired yet</string>
+<real key="distance" name="Distance">How many degrees the door will rotate (default 90).</real>
+<direction key="angle" name="Direction">determines the opening direction of door (up = -1, down = -2).</direction>
+<real key="speed" name="Speed">determines how fast the door moves (default 100).</real>
+<real key="wait" name="Delay">Seconds before returning (default 3, -1 = never return).</real>
+<targetname key="targetname" name="Target Name">if set, a func_button or trigger is required to activate the door.</targetname>
+<target key="target" name="Target">fire entities with this targetname when activated</target>
+<real key="health" name="Health">if set, door must be shot open (default 0).</real>
+<integer key="dmg" name="Damage">damage to inflict on player when he blocks operation of door (default 2). Door will reverse direction when blocked unless CRUSHER spawnflag is set.</integer>
+<string key="team" name="Team Name">assign the same team name to multiple doors that should operate together.</string>
+<sound key="noise_start" name="Start Sound">overrides default start moving sound</sound>
+<sound key="noise" name="Sound File">overrides default movement sound</sound>
+<sound key="noise_stop" name="Stop Sound">overrides default stop moving sound</sound>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of .md3 model included with entity (See Notes).</real3>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="START_OPEN" name="Start Open" bit="0">the door will spawn in the open state and operate in reverse.</flag>
+<flag key="REVERSE" name="Reverse" bit="1">Reverse the normal direction of travel.</flag>
+<flag key="CRUSHER" name="Crusher" bit="2">door will not reverse direction when blocked and will keep damaging player until he dies or gets out of the way.</flag>
+<flag key="NOMONSTER" name="Nomonster" bit="3">monsters can't trigger this door.</flag>
+<flag key="TOGGLE" name="Toggle" bit="5">wait in both the start and end states for a trigger event</flag>
+<flag key="X_AXIS" name="X Axis" bit="6">Use/rotate around the X axis.</flag>
+<flag key="Y_AXIS" name="Y Axis" bit="7">Use/rotate around the Y axis.</flag>
+-------- NOTES --------
+The center of the origin brush determines the point around which it is rotated. It will rotate around the Z axis by default. You can check either the X_AXIS or Y_AXIS box to change that.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_conveyor" color="0 .5 .8">
+Conveyors are stationary brushes that move what's on them. (updated: 12/08/2005)
+-------- KEYS --------
+<real key="speed" name="Speed">speed of displacement (default 100).</real>
+<target key="target" name="Target">targetname to activate when used</target>
+<targetname key="targetname" name="Target Name">to be targeted with</targetname>
+<sound key="noise_start" name="Start Sound">start moving sound (default silent)</sound>
+<sound key="noise" name="Sound File">movement sound (default silent)</sound>
+<sound key="noise_stop" name="Stop Sound">stop moving sound (default silent)</sound>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="START_ON" name="Start On" bit="0">start activated</flag>
+<flag key="TOGGLE" name="Toggle" bit="1">must be triggered again to toogle it's state</flag>
+-------- NOTES --------
+The brush should be have a surface with at least one current content enabled.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_door_secret" color="0 .5 .8">
+A secret door.  Slide back and then to the side. (updated: 12/08/2005)
+-------- KEYS --------
+<string key="message" name="Message">is printed when the door is touched if it is a trigger door and it hasn't been fired yet</string>
+<direction key="angle" name="Direction">determines the opening direction of door (up = -1, down = -2).</direction>
+<real key="speed" name="Speed">determines how fast the door moves (default 50).</real>
+<real key="wait" name="Delay">number of seconds before door returns (5 default, -1 = never return)</real>
+<targetname key="targetname" name="Target Name">if set, a func_button or trigger is required to activate the door.</targetname>
+<target key="target" name="Target">fire entities with this targetname when activated</target>
+<real key="health" name="Health">(default 0) if set to any non-zero value, the button must take damage (any amount) to activate.</real>
+<integer key="dmg" name="Damage">damage to inflict on player when he blocks operation of door (default 2). Door will reverse direction when blocked unless CRUSHER spawnflag is set.</integer>
+<string key="team" name="Team Name">assign the same team name to multiple doors that should operate together (see Notes).</string>
+<sound key="noise_start" name="Start Sound">overrides default start moving sound</sound>
+<sound key="noise" name="Sound File">overrides default movement sound</sound>
+<sound key="noise_stop" name="Stop Sound">overrides default stop moving sound</sound>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/pipe/pipe02.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of .md3 model included with entity (See Notes).</real3>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="ALWAYS_SHOOT" name="Always Shoot" bit="0">door is shooteable even if targeted</flag>
+<flag key="1ST_LEFT" name="1 St Left" bit="1">1st move is left of arrow</flag>
+<flag key="1ST_DOWN" name="1 St Down" bit="2">1st move is down from arrow</flag>
+-------- NOTES --------
+Slide back and then to the side.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_wall" color="0 .5 .8">
+This is just a solid wall if not inhibited. Can be used for conditional walls. (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">activate entities with this targetname when used</target>
+<targetname key="targetname" name="Target Name">use this name to target me</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="TRIGGER_SPAWN" name="Trigger Spawn" bit="0">the wall will not be present until triggered it will then blink in to existance; it will kill anything that was in its way</flag>
+<flag key="TOGGLE" name="Toggle" bit="1">only valid for TRIGGER_SPAWN walls this allows the wall to be turned on and off</flag>
+<flag key="START_ON" name="Start On" bit="2">only valid for TRIGGER_SPAWN walls the wall will initially be present</flag>
+-------- NOTES --------
+Untested in Warfork
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_static" color="0 .5 .8">
+Static non-solid bspmodel. Can be used for conditional walls and models. (updated: 12/08/2005)
+-------- KEYS --------
+<model key="model2" name="Model File">path/name of model to include (eg: models/mapobjects/bitch/fembotbig.md3).</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of .md3 model included with entity (See Notes).</real3>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<targetname key="targetname" name="Target Name">NOT SUPPORTED BY RENDERER - if set, a func_button or trigger can make entity disappear from the game (See Notes).</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+When using the model2 key, the origin point of the model will correspond to the origin point defined by either the origin brush or the origin coordinate value. If a model is included with a targeted func_static, the brush(es) of the entity will be removed from the game but the .md3 model won't: it will automatically be moved to the (0 0 0) world origin so you should NOT include an .md3 model to a targeted func_static.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_object" color="0 .5 .8">
+This is solid bmodel that will fall if its support it removed. (updated: 12/08/2005)
+-------- KEYS --------
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of .md3 model included with entity (See Notes).</real3>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<target key="target" name="Target">fire targets with this name at being used.</target>
+<targetname key="targetname" name="Target Name">name to be targeted with.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="TRIGGER_SPAWN" name="Trigger Spawn" bit="0">spawn this entity when target is fired</flag>
+-------- NOTES --------
+model2 is not supported in func_objects, only map brushes can be safely used as model
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_explosive" color="0 .5 .8">
+Any brush that you want to explode or break apart.If you want an
+explosion, set dmg and it will do a radius explosion of that amount
+at the center of the bursh. If targeted it will not be shootable. (updated: 12/08/2005)
+-------- KEYS --------
+<real key="health" name="Health">defaults to 100.</real>
+<real key="mass" name="Mass">defaults to 75.  This determines how much debris is emitted when it explodes.  You get one large chunk per 100 of mass (up to 8) and one small chunk per 25 of mass (up to 16).  So 800 gives the most.</real>
+<model key="model2" name="Model File">a md3 model.</model>
+<real3 key="origin" name="World Origin">alternate method of setting XYZ origin of .md3 model included with entity (See Notes).</real3>
+<real key="light" name="Light Intensity">constantLight radius of .md3 model included with entity. Has no effect on the entity's brushes (default 0).</real>
+<color key="_color" name="Color">constantLight color of .md3 model included with entity. Has no effect on the entity's brushes (default 1 1 1).</color>
+<target key="target" name="Target">fire targets with this name at being used.</target>
+<targetname key="targetname" name="Target Name">name to be targeted with.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="TRIGGER_SPAWN" name="Trigger Spawn" bit="0">spawn this entity when target is fired</flag>
+-------- NOTES --------
+Untested: model2 models might not collide perfectly if used with a brush origin
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="func_clock" color="0 0 1" box="-8 -8 -8 8 8 8">
+Target a target_string with this, to print a clock. The default is to be a time of day clock (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">fire targets with this name at being used.</target>
+<targetname key="targetname" name="Target Name">name to be targeted with.</targetname>
+<target key="pathtarget" name="Path Target">countdown will fire this one</target>
+<integer key="count" name="Count">a value.</integer>
+<integer key="style" name="Style">0 "xx", 1 "xx:xx", 2 "xx:xx:xx"</integer>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="TIMER_UP" name="Timer Up" bit="0">run for "count" seconds and then fire target.</flag>
+<flag key="TIMER_DOWN" name="Timer Down" bit="1">run for "count" seconds and then fire target.</flag>
+<flag key="START_OFF" name="Start Off" bit="2">Start in the off state.</flag>
+<flag key="MULTI_USE" name="Multi Use" bit="3">can be used more than once.</flag>
+-------- NOTES --------
+Untested
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="_decal" color="0 .5 .8">
+This is not an entity as such, it never reaches the game. It is strictly an editor utility to project decal surfaces onto map geometry (brushes, patches and misc_model surfaces).
+-------- KEYS --------
+<target key="target" name="Target">Optional point entity that sets the projection direction and bounds. If omitted, makebsp projects along the calculated surface normal (or straight down).</target>
+<real key="distance" name="Projection Depth">Projection depth (default 64). Alias: depth.</real>
+<string key="decalgroup" name="Decal Group">Only project onto receivers with a matching decalgroup.</string>
+<real key="patchSubdivision" name="Patch Subdivision">Receiver-patch tessellation resolution (default 0.4, min 0.05).</real>
+<color key="vertexcolor" name="Vertex Color">Decal vertex color override. Alias: _color.</color>
+<real key="vertexalpha" name="Vertex Alpha">Decal opacity override.</real>
+-------- NOTES --------
+In makebsp the _decal entity can contain one or more brush solids and/or curved Bezier patches as its projection source - a patch mesh is not required, and brushes and patches can be mixed freely in the same entity. The target key is optional; without it the projection direction is derived from the surface normal (or straight down). (q3map2 requires a patch mesh and a target.) Distance alphablending is not supported.
+  </group>
+
+
+<!--
+=============================================================================
+
+ PATH_* ENTITIES
+
+=============================================================================
+-->
+
+  <point name="path_corner" color=".5 .3 0" box="-8 -8 -8 8 8 8">
+Path corner entity that func_trains can be made to follow. (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">point to next path_corner in the path.</target>
+<targetname key="targetname" name="Target Name">the train following the path or the previous path_corner in the path points to this.</targetname>
+<target key="pathtarget" name="Path Target">gets used when an entity that has this path_corner targeted touches it</target>
+<real key="speed" name="Speed">speed of func_train while moving to the next path corner. This will override the speed value of the train.</real>
+<real key="wait" name="Delay">number of seconds func_train will pause on path corner before moving to next path corner (default 0 - see Notes).</real>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="TELEPORT" name="Teleport" bit="0">instant move to next target</flag>
+-------- NOTES --------
+Setting the wait key to -1 will not make the train stop on the path corner, it will simply default to 0.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+
+<!--
+=============================================================================
+
+ INFO_* ENTITIES
+
+=============================================================================
+-->
+
+  <point name="info_null" color="0 .5 0" box="-8 -8 -8 8 8 8">
+Used as a positional target for light entities to create a spotlight effect. removed during gameplay. (updated: 12/08/2005)
+-------- KEYS --------
+<targetname key="targetname" name="Target Name">must match the target key of entity that uses this for pointing.</targetname>
+-------- NOTES --------
+A target_position can be used instead of this but was kept in for legacy purposes.
+  </point>
+
+  <point name="info_notnull" color="0 .5 0" box="-8 -8 -8 8 8 8">
+Used as a positional target for entities that can use directional pointing. Kept during gameplay. (updated: 12/08/2005)
+-------- KEYS --------
+<targetname key="targetname" name="Target Name">must match the target key of entity that uses this for pointing.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+A target_position can be used instead of this but was kept in for legacy purposes.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="info_camp" color="0 .5 0" box="-8 -8 -8 8 8 8">
+Don't use. Can be used as pointing origin, but there are other entities for it. removed during gameplay. (updated: 12/08/2005)
+-------- KEYS --------
+<targetname key="targetname" name="Target Name">must match the target key of entity that uses this for pointing.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+It was created to mark camp spots for monsters and bots, but it isn't used anymore and is only kept in for legacy purposes.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="info_teleport_destination" color="0.5 0.5 0.5" box="-16 -16 -24 16 16 32">
+You can point trigger_teleports at these. (updated: 12/08/2005)
+-------- KEYS --------
+<targetname key="targetname" name="Target Name">must match the target key of entity that uses this for pointing.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+Does the same thing as misc_teleporter_dest
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+
+<!--
+=============================================================================
+
+ LIGHT ENTITY
+
+=============================================================================
+-->
+
+  <point name="light" color=".65 .65 1" box="-8 -8 -8 8 8 8">
+Non-displayed point, spot or sun light source. Pointed lights become spotlights.
+A sun is created when the sun key is present; aim it with target or angles.
+-------- KEYS --------
+<real key="light" name="Intensity">Light intensity (default 300).</real>
+<color key="_color" name="Light Color">Light color (float RGB, int RGB, or #RRGGBB). Derived from lightimage if omitted.</color>
+<integer key="style" name="Light Style">Legacy dynamic light style. NOTE: currently broken in makebsp; use realtime lights instead.</integer>
+<real key="radius" name="Spot Radius">Spotlight radius at the target point (default 64).</real>
+<real key="softness" name="Spot Softness">Spotlight edge softness (default 1).</real>
+<real key="backsplash" name="Backsplash">Spotlight backsplash fraction (default 0.1).</real>
+<target key="target" name="Target">Aiming target; makes the light a spotlight.</target>
+<direction key="dir" name="Direction">Spotlight aim direction (alternative to target).</direction>
+<angles key="angles" name="Pitch Yaw Roll">Spotlight/sun aim angles.</angles>
+<boolean key="sun" name="Sun Light">Presence marks this light as a sun.</boolean>
+-------- FALLOFF / CULLING --------
+<string key="attenuation" name="Falloff Model">standard, soft, linear, unreal, smoothstep. The LINEAR_ATTN spawnflag forces linear.</string>
+<real key="atten_distscale" name="Distance Scale">Falloff distance scale; 0.5 doubles the reach.</real>
+<real key="atten_anglescale" name="Angle Scale">Angular falloff scale.</real>
+<real key="cutoff" name="Cutoff">Auto-scaled cutoff anchor for culling.</real>
+<real key="energycutoff" name="Absolute Energy Cutoff">Absolute energy cull threshold.</real>
+<real key="fadeout" name="Fade Out">Fraction of light reach used for a soft fade.</real>
+<real key="prestep" name="Singularity Offset">Offset of the light singularity (default 16). Aliases: rampoffset, extradist.</real>
+-------- LIGHTMAP / GRID --------
+<real key="grid_ambientscale" name="Grid Ambient Scale">Multiplier for ambient contribution to the lightgrid.</real>
+<real key="grid_directscale" name="Grid Direct Scale">Multiplier for direct contribution to the lightgrid.</real>
+<real key="grid_maxambient" name="Grid Max Ambient">Ambient grid luma cap (0 = uncapped).</real>
+<real key="grid_maxdirect" name="Grid Max Direct">Direct grid luma cap (0 = uncapped).</real>
+<boolean key="nodeluxe" name="No Deluxe">Exclude this light from deluxe direction maps.</boolean>
+<boolean key="backsplash_nodeluxe" name="No Backsplash Deluxe">Exclude backsplash from deluxe direction maps.</boolean>
+<texture key="lightimage" name="Color From Shader">Derive the light color from a shader's average color.</texture>
+<texture key="haloshader" name="Halo Shader">Light halo shader ("none" or "0" disables).</texture>
+<real key="haloscale" name="Halo Scale">Halo size multiplier (default 1).</real>
+-------- SPAWNFLAGS --------
+<flag key="LINEAR_ATTN" name="Linear Attn" bit="0">Use linear distance falloff (read by makebsp). Equivalent to the attenuation key set to linear.</flag>
+<flag key="START_OFF" name="Start Off" bit="6">Light starts switched off (game spawnflag).</flag>
+-------- NOTES --------
+Legacy spawnflag bits 2 (NOANGLE_ATTN), 4 (DARK_LIGHT), 16 (NO_GRID) and 32 (NO_COLOR_NORMALIZE) are no longer read by the game or the compiler.
+  </point>
+
+
+<!--
+=============================================================================
+
+ TRIGGER_* ENTITIES
+
+=============================================================================
+-->
+
+  <point name="trigger_always" color=".5 .5 .5" box="-8 -8 -8 8 8 8">
+Automatic trigger. It will fire the entities it targets as soon as it spawns in the game. (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">fire entities with this targetname.</target>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <group name="trigger_push" color=".5 .5 .5">
+This is used to create jump pads and launch ramps. It MUST point to a target_position or info_notnull entity to work. (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">this points to the target_position to which the player will jump.</target>
+<sound key="noise" name="Sound File">override default noise ("silent" doesn't make any noise)</sound>
+<real key="wait" name="Delay">time before it can be triggered again.</real>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="PUSH_ONCE" name="Push Once" bit="0">only push when touched the first time</flag>
+-------- NOTES --------
+To make a jump pad or launch ramp, place the target_position/info_notnull entity at the highest point of the jump and target it with this entity.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="trigger_multiple" color=".5 .5 .5">
+Variable size repeatable trigger. It will fire the entities it targets when touched by player. Can be made to operate like a trigger_once entity by setting the "wait" key to -1. It can also be activated by another trigger that targets it. (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">this points to the entity to activate.</target>
+<targetname key="targetname" name="Target Name">activating trigger points to this.</targetname>
+<sound key="noise" name="Sound File">play this noise when triggered</sound>
+<string key="message" name="Message">centerprint this text string when triggered</string>
+<real key="wait" name="Delay">time in seconds until trigger becomes re-triggerable after it's been touched (default 0.2, -1 = trigger once).</real>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="MONSTER" name="Monster" bit="0">monsters won't activate this trigger unless this flag is set</flag>
+<flag key="NOT_PLAYER" name="Not Player" bit="1">players can't trigger this one (for those triggered by other triggers)</flag>
+<flag key="TRIGGERED" name="Triggered" bit="2">spawns as triggered and must wait for the "wait" key to pass to be re-triggered</flag>
+-------- NOTES --------
+message is untested
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="trigger_once" color=".5 .5 .5">
+Triggers once, then removes itself. You must set the key "target" to the name of another object in the level that has a matching "targetname". (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">this points to the entity to activate.</target>
+<targetname key="targetname" name="Target Name">activating trigger points to this.</targetname>
+<sound key="noise" name="Sound File">play this noise when triggered</sound>
+<string key="message" name="Message">centerprint this text string when triggered</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="MONSTER" name="Monster" bit="0">monsters won't activate this trigger unless this flag is set</flag>
+<flag key="NOT_PLAYER" name="Not Player" bit="1">players can't trigger this one (for those triggered by other triggers)</flag>
+<flag key="TRIGGERED" name="Triggered" bit="2">spawns as triggered and must wait for the "wait" key to pass to be re-triggered</flag>
+-------- NOTES --------
+Wait key will be ignored. message is untested
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="trigger_relay" color=".5 .5 .5">
+This fixed size trigger cannot be touched, it can only be fired by other events. (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">this points to the entity to activate.</target>
+<targetname key="targetname" name="Target Name">activating trigger points to this.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+Trigger_relay is a tool for use in entities meccanos. It's of no use by itself, and can only be used as an intermediary between events. Wait key will be ignored.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="trigger_counter" color=".5 .5 .5">
+Acts as an intermediary for an action that takes multiple inputs. Example: a sequence of several buttons to activate a event (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">this points to the entity to activate.</target>
+<targetname key="targetname" name="Target Name">activating trigger points to this.</targetname>
+<integer key="count" name="Count">number of actions to count (default 2)</integer>
+<sound key="noise_start" name="Start Sound">sound to play each time a event happens</sound>
+<sound key="noise_stop" name="Stop Sound">sound to play at the last event in the count</sound>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="NOMESSAGE" name="Nomessage" bit="0">if not set, it will print "1 more.. " etc when triggered and "sequence complete" when finished.</flag>
+<flag key="NOSOUNDS" name="Nosounds" bit="1">if not set, it will try to play the noise_start and noise_stop sounds</flag>
+-------- NOTES --------
+Sounds like this one should be a target and not a trigger, but well...
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="trigger_hurt" color=".5 .5 .5">
+Any player that touches this will be hurt by "dmg" points of damage (updated: 23/10/2005)
+-------- KEYS --------
+<integer key="dmg" name="Damage">number of points of damage inflicted to player per "wait" time lapse (default 5 - integer values only).</integer>
+<real key="wait" name="Delay">wait time before hurting again (in seconds. Default 0.1)</real>
+<sound key="noise" name="Sound File">sound to be played when inflicting damage</sound>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="START_OFF" name="Start Off" bit="0">Start in the off state.</flag>
+<flag key="TOGGLE" name="Toggle" bit="1">toogle</flag>
+<flag key="SILENT" name="Silent" bit="2">supresses the sizzling sound while player is being hurt.</flag>
+<flag key="NO_PROTECTION" name="No Protection" bit="3">player will be hurt regardless of protection (see Notes).</flag>
+<flag key="SLOW" name="Slow" bit="4">changes the damage rate to once per second.</flag>
+<flag key="KILL" name="Kill" bit="5">player will die instantly.</flag>
+<flag key="FALL" name="Fall" bit="6">player will die the next time he touches the ground.</flag>
+-------- NOTES --------
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="trigger_capture_area" color=".5 .5 .5">
+Target it to a misc_capture_area_indicator
+-------- KEYS --------
+<target key="target" name="Target">this points to the entity to activate.</target>
+<targetname key="targetname" name="Target Name">activating trigger points to this.</targetname>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+Target it to a misc_capture_area_indicator.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+  <group name="trigger_teleport" color=".5 .5 .5">
+Players touching this will be teleported. Target it to a misc_teleporter_dest. (updated: 12/08/2005)
+-------- KEYS --------
+<target key="target" name="Target">this points to the entity to activate.</target>
+<targetname key="targetname" name="Target Name">activating trigger points to this.</targetname>
+<sound key="noise" name="Sound File">play this noise when triggered</sound>
+<real key="wait" name="Delay">time in seconds until trigger becomes re-triggerable after it's been touched (default 0.2, -1 = trigger once).</real>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SPECTATOR" name="Spectator" bit="0">only teleport players moving in spectator mode</flag>
+-------- NOTES --------
+Target it to a misc_teleporter_dest.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </group>
+
+
+<!--
+=============================================================================
+
+ MISC_* ENTITIES
+
+=============================================================================
+-->
+
+  <point name="misc_teleporter_dest" color="1 .5 .25" box="-32 -32 -24 32 32 -16">
+Teleport destination location point for trigger_teleporter entities. (updated: 12/08/2005)
+-------- KEYS --------
+<angle key="angle" name="Yaw Angle">direction in which player will look when teleported.</angle>
+<targetname key="targetname" name="Target Name">make the trigger_teleporter point to this.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+Does the same thing as info_teleport_destination
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="misc_model" color="1 .5 .25" box="-16 -16 -16 16 16 16">
+Compiler-only model instance: makebsp bakes the model into the BSP at compile time. Supported formats: md3, iqm, md5mesh, obj, 3ds, ase, fbx, gltf, glb, lwo.
+-------- KEYS --------
+<real3 key="origin" name="World Origin">Base translation/position of the model (X Y Z).</real3>
+<angle key="angle" name="Yaw Angle">Yaw angle, used only when angles is 0 0 0.</angle>
+<angles key="angles" name="Pitch Yaw Roll">Model orientation in PITCH YAW ROLL.</angles>
+<model key="model" name="Model File">Path to the model file to load.</model>
+<string key="modelscale" name="Model Scale">Uniform scale factor applied to all axes (default 1).</string>
+<real3 key="modelscale_vec" name="Non-uniform Scale">Non-uniform scale vector (X Y Z); 0 0 0 falls back to modelscale. A negative determinant flips the winding.</real3>
+<targetname key="targetname" name="Target Name">Name matched by a func_trim entity's target key, limiting trimming to this model.</targetname>
+<real key="smooth" name="Lightmap Smooth Radius">Lightmap smoothing radius for the model (0 disables).</real>
+<string key="smoothgroup" name="Smooth Group">Shared smoothing group for kitbashed models.</string>
+<color key="vertexcolor" name="Vertex Color">Override the vertex color.</color>
+<real key="vertexalpha" name="Vertex Alpha">Override opacity (0..1 or 0..255).</real>
+<boolean key="upscale" name="Upscale Raytracing">Raytrace at 2x lightmap resolution.</boolean>
+<real key="supersample" name="Supersample Radius">Supersampling trace radius (0 = off).</real>
+<real key="samplesize" name="Lightmap Sample Size">Lightmap sample size override. Alias: lightmapsamplesize.</real>
+<real key="lightmapscale" name="Lightmap Scale">Lightmap resolution factor (0.01..16, default 1).</real>
+<boolean key="forceuvgen" name="Force Lightmap UVs">Generate fresh lightmap UVs instead of using the model's UVs.</boolean>
+<boolean key="castshadows" name="Cast Shadows">Cast shadows into the lightmap (default 1). Alias: cs.</boolean>
+<string key="collisiontype" name="Collision Type">object (default), wrap, extrude, objectdetail, wrapdetail, terrain, none/nosolid/nonsolid.</string>
+<string key="modelgroup" name="Model Group">Bind this model to a brush entity with the same modelgroup. Alias: modelsgroup.</string>
+<string key="decalgroup" name="Decal Group">Only decals with a matching decalgroup project onto this model.</string>
+<integer key="maxtriangles" name="Max Triangles">Triangle budget before decimation. Alias: maxtriangle.</integer>
+<real key="light" name="Light Intensity">Only for models using the tag_light shader: intensity of the generated lights.</real>
+<string key="lighttype" name="Light Type">Only for tag_light models: point/pointlight generates point lights; anything else generates spotlights.</string>
+-------- NOTES --------
+makebsp ignores the legacy q3map2 keys _frame, _remap* (including _remap2, etc.), _castshadows, _receiveshadows and _lightmapscale, and it ignores misc_model spawnflags entirely. Use samplesize, castshadows and lightmapscale instead.
+With type set to surface/surfacelight, makebsp also applies these surface-light keys to the model surfaces: light, color, backsplash, subdivide, cutoff, fadeout, nodeluxe, backsplash_nodeluxe, grid_ambientscale, grid_directscale and attenuation.
+Models using the tag_light shader (shown as a triangle in the editor) emit a real light from each triangle. makebsp spawns one light entity per triangle and copies all of this entity's keys onto it (except classname, origin, model and smooth), so a tag_light model can use all the same keys as the light entity - color, light, radius, softness, attenuation, target/dir, cutoff, etc. lighttype point/pointlight makes point lights; anything else makes spotlights.
+  </point>
+
+  <point name="misc_portal_camera" color="1 .5 .25" box="-8 -8 -8 8 8 8">
+Portal camera. This camera is used to project its view onto a portal surface in the level through the intermediary of a misc_portal_surface entity. Use the "angles" key or target a target_position or info_notnull entity to set the camera's pointing direction. (updated: 12/08/2005)
+-------- KEYS --------
+<angles key="angles" name="Pitch Yaw Roll">this sets the pitch and yaw aiming angles of the portal camera (default 0 0). Use "roll" key to set roll angle.</angles>
+<target key="target" name="Target">point this to a target_position entity to set the camera's pointing direction.</target>
+<targetname key="targetname" name="Target Name">a misc_portal_surface portal surface indicator must point to this.</targetname>
+<angle key="roll" name="Camera Roll">roll angle of camera. A value of 0 is upside down and 180 is the same as the player's view.</angle>
+-------- SPAWNFLAGS --------
+<flag key="SLOWROTATE" name="Slowrotate" bit="0">makes the portal camera rotate slowly along the roll axis.</flag>
+<flag key="FASTROTATE" name="Fastrotate" bit="1">makes the portal camera rotate faster along the roll axis.</flag>
+<flag key="NOROTATE" name="Norotate" bit="2">disables rotation</flag>
+-------- NOTES --------
+Both the setting "angles" key or "targeting a target_position" methods can be used to aim the camera. However, the target_position method is simpler. In both cases, the "roll" key must be used to set the roll angle. If either the SLOWROTATE or FASTROTATE spawnflag is set, then the "roll" value is irrelevant.
+  </point>
+
+  <point name="misc_portal_surface" color="1 .5 .25" box="-8 -8 -8 8 8 8">
+The portal surface nearest this entity will show a view from the targeted misc_portal_camera, or a mirror view if untargeted. This must be within 64 world units of the surface! (updated: 12/08/2005)
+-------- KEYS --------
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+The entity must be no farther than 64 units away from the portal surface to lock onto it. To make a mirror, apply the common/mirror shader to the surface, place this entity near it but don't target a misc_portal_camera.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="misc_skyportal" color="1 .5 .25" box="-8 -8 -8 8 8 8">
+Camera of a portal view which will show up at the sky
+-------- KEYS --------
+<boolean key="noents" name="Hide Sky Entities">when set to 1 the entities in the sky room will be skept from drawing.</boolean>
+<real key="fov" name="Field of View">when set to any value it will override the player fov. Do not set for normal behavior.</real>
+<real key="scale" name="View Scale">scale the view to make it appear closer or further.</real>
+-------- NOTES --------
+The entity must be placed in a room which is not connected to the rest of the map.
+  </point>
+
+  <point name="misc_explobox" color="1 .5 .25" box="-16 -16 0 16 16 40">
+-------- KEYS --------
+<target key="target" name="Target">fire entities with this targetname at exploding</target>
+<targetname key="targetname" name="Target Name">to explode by being triggered.</targetname>
+<real key="health" name="Health">default 80</real>
+<real key="mass" name="Mass">influences the ammount of debris at exploding (default 100)</real>
+<integer key="dmg" name="Damage">damage radius of the explosion (default 150)</integer>
+<angle key="angle" name="Yaw Angle">direction in which model will be oriented.</angle>
+<model key="model" name="Model File">path/name of model to use (eg: models/mapobjects/barrel/barrel.md3).</model>
+  </point>
+
+  <point name="misc_capture_area_indicator" color="1 .5 .25" box="-16 -16 0 16 16 96" model="models/objects/capture_area/indicator.md3">
+Indicator of the capture area for domination alike gametypes
+-------- SPAWNFLAGS --------
+<flag key="SUSPENDED" name="Suspended" bit="0">Float: disable gravity and do not drop the item to the floor.</flag>
+  </point>
+
+  <point name="misc_particles" color=".6 .7 .7" box="-8 -8 -8 8 8 8">
+Generates particles
+-------- KEYS --------
+<angles key="angles" name="Pitch Yaw Roll">direction in which the particles will be thrown (unused when spherical).</angles>
+<real key="radius" name="Radius">radius of the spread of the particles direction (unused when spherical).</real>
+<texture key="shaderName" name="Shader Name">the particle shader to use.</texture>
+<real key="size" name="Particle Size">the radius of a particle.</real>
+<real key="delay" name="Fade Delay">time before the particle dissapears.</real>
+<integer key="gameteam" name="Team Filter">use teamcolors on the sprites. 2 ALPHA, 3 BETA.</integer>
+<real key="speed" name="Speed">Speed at which the particles will be thrown</real>
+<integer key="count" name="Count">Number of particles per second</integer>
+<color key="_color" name="Color">color of the light emitted by the particle.</color>
+<sound key="noise" name="Sound File">the entity (not each particle) produces this looping sound.</sound>
+-------- SPAWNFLAGS --------
+<flag key="SPHERICAL" name="Spherical" bit="0">Particles will be generated in all directions around a point</flag>
+<flag key="SOLID" name="Solid" bit="1">Particles will bounce on walls</flag>
+<flag key="GRAVITY" name="Gravity" bit="2">Particles will be affected by gravity</flag>
+<flag key="LIGHT" name="Light" bit="3">enable light on the particles</flag>
+<flag key="EXPAND_EFFECT" name="Expand Effect" bit="4">The particle expands during its lifetime</flag>
+<flag key="SHRINK_EFFECT" name="Shrink Effect" bit="5">The particle shrinks during its lifetime</flag>
+<flag key="START_OFF" name="Start Off" bit="6">Start in the off state.</flag>
+  </point>
+
+
+<!--
+=============================================================================
+
+ TARGET_* ENTITIES
+
+=============================================================================
+-->
+
+  <point name="target_give" color="0 .5 0" box="-8 -8 -8 8 8 8">
+This is used to give ammo, weapons, health or items to the player who activates it.
+-------- KEYS --------
+<target key="target" name="Target">this points to the item(s) to give when activated.</target>
+<targetname key="targetname" name="Target Name">activating trigger or spawn entity points to this.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+There are 2 ways to use this entity.
+a) automatically give items to players when they spawn in the game: make a spawn location entity like info_player_deathmatch or CTF respawn points target this entity, then make it target the item(s) to give to the player upon respawn.
+b) give items to players during the game: make a trigger_multiple target this entity, then make it target the item(s) to give to the player when the trigger is touched.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="target_startTimer" color="1 0 0" box="-8 -8 -8 8 8 8">
+Timer Start
+  </point>
+
+  <point name="target_stopTimer" color="1 0 0" box="-8 -8 -8 8 8 8">
+Timer Stop
+-------- KEYS --------
+<target key="target" name="Target">stopTimer triggers its targets when a best time occurs.</target>
+  </point>
+
+  <point name="target_checkpoint" color="1 0 0" box="-8 -8 -8 8 8 8">
+Checkpoint
+  </point>
+
+  <point name="target_location" color="0 .5 0" box="-8 -8 -8 8 8 8">
+Location marker used by bots and players for team orders and team chat in the course of Teamplay games. The closest target_location in sight is used for the location. If none is in sight, the closest in distance is used. (updated: 12/08/2005)
+-------- KEYS --------
+<string key="message" name="Message">name of the location (text string). Displayed in parentheses in front of all team chat and order messages.</string>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- NOTES --------
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="target_position" color="0 .5 0" box="-8 -8 -8 8 8 8">
+Aiming target for entities like light, misc_portal_camera and trigger_push (jump pads) in particular. (updated: 12/08/2005)
+-------- KEYS --------
+<targetname key="targetname" name="Target Name">the entity that requires an aiming direction points to this.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+<real3 key="origin" name="World Origin">Aim point in world space.</real3>
+-------- NOTES --------
+To make a jump pad, place this entity at the highest point of the jump and target it with a trigger_push entity.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="target_print" color="0 .5 0" box="-8 -8 -8 8 8 8">
+This will print a message on the center of the screen when triggered. By default, all the clients will see the message. (updated: 12/08/2005)
+-------- KEYS --------
+<string key="message" name="Message">text string to print on screen.</string>
+<targetname key="targetname" name="Target Name">the activating trigger points to this.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="SAMETEAM" name="Sameteam" bit="0">only players in activator's team will see the message.</flag>
+<flag key="OTHERTEAM" name="Otherteam" bit="1">only players in other than activator's team will see the message.</flag>
+<flag key="PRIVATE" name="Private" bit="2">only the player that activates the target will see the message.</flag>
+-------- NOTES --------
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="target_speaker" color="0 .7 .7" box="-8 -8 -8 8 8 8">
+Normal sounds play each time the target is used.  The reliable flag can be set for crucial voiceovers. Looped sounds are always atten 3 / vol 1, and the use function toggles it on/off. Multiple identical looping sounds will just increase volume without any speed cost. (updated: 12/08/2005)
+-------- KEYS --------
+<sound key="noise" name="Sound File">path/name of .wav file to play (eg. sound/world/growl1.wav - see Notes).</sound>
+<real key="volume" name="Volume">Documented in older references but not read by the current game. Use the attenuation key to control how far the sound carries.</real>
+<integer key="attenuation" name="Sound Attenuation">Sound attenuation: -1 = none (whole level), 1 = normal fighting sounds, 2 = idle sounds, 3 = ambient sounds.</integer>
+<real key="wait" name="Delay">delay in seconds between each time the sound is played ("random" key must be set - see Notes).</real>
+<real key="random" name="Delay Variance">random time variance in seconds added or subtracted from "wait" delay ("wait" key must be set - see Notes).</real>
+<targetname key="targetname" name="Target Name">the activating button or trigger points to this.</targetname>
+<boolean key="notfree" name="Hidden for Solo">Set to 1 to hide this entity in non-team-based gametypes (ffa, dm, duel, race, ...) and in team gametypes limited to one player per team.</boolean>
+<boolean key="notduel" name="Hidden for Duels">Set to 1 to hide this entity in team-based gametypes with exactly one player per team.</boolean>
+<boolean key="notteam" name="Hidden for Teamplay">Set to 1 to hide this entity in team-based gametypes with more than one player per team (e.g. CTF, TDM).</boolean>
+<string key="gametype" name="Supported Game Types">Comma- or space-separated allow-list of gametype names in which this entity will spawn; if set, it will not spawn in any other gametype. Names are case-insensitive. See the supported gametype values note below.</string>
+<string key="not_gametype" name="Excluded Game Types">Comma- or space-separated deny-list of gametype names in which this entity must not spawn. Uses the same values as the gametype key.</string>
+-------- SPAWNFLAGS --------
+<flag key="LOOPED_ON" name="Looped On" bit="0">sound will loop and initially start on in level (will toggle on/off when triggered).</flag>
+<flag key="LOOPED_OFF" name="Looped Off" bit="1">sound will loop and initially start off in level (will toggle on/off when triggered).</flag>
+<flag key="RELIABLE" name="Reliable" bit="2"></flag>
+<flag key="GLOBAL" name="Global" bit="3">Overrides attenuation setting. Sound will play full volume throughout the level as if it had attenuation -1</flag>
+<flag key="ACTIVATOR" name="Activator" bit="4">sound will play only for the player that activated the target.</flag>
+-------- NOTES --------
+The path portion value of the "noise" key can be replaced by the implicit folder character "*" for triggered sounds that belong to a particular player model. For example, if you want to create a "bottomless pit" in which the player screams and dies when he falls into, you would place a trigger_multiple over the floor of the pit and target a target_speaker with it. Then, you would set the "noise" key to "*falling1.wav". The * character means the current player model's sound folder. So if your current player model is Visor, * = sound/player/visor, if your current player model is Sarge, * = sound/player/sarge, etc. This cool feature provides an excellent way to create "player-specific" triggered sounds in your levels.
+Supported gametype values: Bomb and Defuse: bomb, Clan Arena: ca, Capture the Flag: ctf, Capture the Flag Tactics: ctftactics, Duel Arena: da, Deathmatch: dm, Tournament: duel, Free for All: ffa, Headhunt: headhunt, Race: race, Rekt: rekt, Team Deathmatch: tdm, Tutorial: tutorial.
+  </point>
+
+  <point name="props_skyportal" color=".6 .7 .7" box="-8 -8 0 8 8 16">
+-------- KEYS --------
+<real key="fov" name="Field of View">for the skybox default is whatever client's fov is set to</real>
+<real key="scale" name="View Scale">is world/skyarea ratio if you want to keep a certain perspective when player moves around the world</real>
+<boolean key="noents" name="Hide Sky Entities">makes the skyportal ignore entities within the sky area, making them invisible for the player</boolean>
+  </point>
+
+
+<!--
+=============================================================================
+
+ MAKEBSP ENTITIES
+
+=============================================================================
+-->
+
+  <group name="func_trisoup" color="0 .5 .8">
+Compiler-only entity that turns its brushes and patches into a single smooth triangle soup with unique lightmap UVs. Geometry stays in the BSP.
+-------- KEYS --------
+<real key="shadeangle" name="Smooth Angle">Smooth-normal blend threshold in degrees (default 46).</real>
+<real key="subdivide" name="Subdivide">Patch flattening tolerance (default 6.0). Alias: subdivisions.</real>
+<real key="smooth" name="Lightmap Smooth Radius">Lightmap smoothing radius (0 disables).</real>
+<string key="smoothgroup" name="Smooth Group">Shared smoothing group name.</string>
+<color key="vertexcolor" name="Vertex Color">Override the vertex color.</color>
+<real key="vertexalpha" name="Vertex Alpha">Override opacity (0..1 or 0..255).</real>
+<boolean key="upscale" name="Upscale Raytracing">Raytrace at 2x lightmap resolution.</boolean>
+<real key="supersample" name="Supersample Radius">Supersampling trace radius (0 = off).</real>
+<real key="samplesize" name="Lightmap Sample Size">Lightmap sample size override. Alias: lightmapsamplesize.</real>
+<boolean key="enforcesamplesize" name="Enforce Sample Size">Subdivide to honour the sample size.</boolean>
+<string key="decalgroup" name="Decal Group">Only decals with a matching decalgroup project here.</string>
+<boolean key="nosolid" name="Render Only">Render without collision. Also nonsolid / collisiontype none.</boolean>
+-------- NOTES --------
+Chamfer width keys are currently inactive for trisoup geometry.
+collisiontype none (also nonsolid) is accepted by the compiler for render-only geometry; it has no editor widget.
+  </group>
+
+  <group name="func_light" color="0 .5 .8">
+Compiler-only entity whose brush faces emit point, spot or surface lights. The entity itself is consumed by the compiler, but its brushes are kept: they are moved into worldspawn and remain part of the BSP. Only visible faces generate light - faces using nodraw, skip, sky or similar non-drawn shaders are ignored.
+-------- KEYS --------
+<string key="type" name="Light Type">point, spot (default), or surface. Aliases: pointlight, spotlight, surfacelight.</string>
+<real key="nudge" name="Face Offset">Offset from the brush face (default 1.0 spot / 0.01 point).</real>
+<real key="light" name="Intensity">Emission intensity.</real>
+<color key="_color" name="Light Color">Light color; derived from the surface lightimage if omitted.</color>
+<real key="backsplash" name="Backsplash">Backsplash fraction (0..1).</real>
+<real key="subdivide" name="Surface Subdivision">Surface-light subdivision fineness.</real>
+<real key="radius" name="Spot Radius">Spot radius at the target (default 64).</real>
+<real key="softness" name="Spot Softness">Spot edge softness (default 1).</real>
+<target key="target" name="Target">Spotlight aim target.</target>
+<direction key="dir" name="Direction">Spotlight aim direction.</direction>
+<angles key="angles" name="Pitch Yaw Roll">Spotlight aim angles.</angles>
+<real key="prestep" name="Singularity Offset">Offset from the face (default 16). Aliases: rampoffset, extradist.</real>
+<string key="attenuation" name="Falloff Model">standard, soft, linear, unreal, smoothstep.</string>
+<real key="cutoff" name="Cutoff">Auto-scaled cutoff anchor.</real>
+<real key="energycutoff" name="Absolute Energy Cutoff">Absolute energy cull threshold.</real>
+<real key="fadeout" name="Fade Out">Soft fade fraction.</real>
+<boolean key="nodeluxe" name="No Deluxe">Exclude from deluxe direction maps.</boolean>
+<boolean key="backsplash_nodeluxe" name="No Backsplash Deluxe">Exclude backsplash from deluxe maps.</boolean>
+<real key="grid_ambientscale" name="Grid Ambient Scale">Grid ambient contribution multiplier (default 1).</real>
+<real key="grid_directscale" name="Grid Direct Scale">Grid direct contribution multiplier (default 1).</real>
+<real key="grid_maxambient" name="Grid Max Ambient">Ambient grid luma cap (0 = uncapped).</real>
+<real key="grid_maxdirect" name="Grid Max Direct">Direct grid luma cap (0 = uncapped).</real>
+<texture key="haloshader" name="Halo Shader">Light halo shader ("none" or "0" disables).</texture>
+<real key="haloscale" name="Halo Scale">Halo size multiplier (default 1).</real>
+-------- BRUSH SURFACE OVERRIDES --------
+<real key="smooth" name="Lightmap Smooth Radius">Lightmap smoothing radius for this entity's surfaces (0 disables).</real>
+<color key="vertexcolor" name="Vertex Color">Override the vertex color.</color>
+<real key="vertexalpha" name="Vertex Alpha">Override opacity (0..1 or 0..255).</real>
+<boolean key="upscale" name="Upscale Raytracing">Raytrace this entity's surfaces at 2x lightmap resolution.</boolean>
+<real key="supersample" name="Supersample Radius">Supersampling trace radius (0 = off).</real>
+<real key="samplesize" name="Lightmap Sample Size">Lightmap sample size override. Alias: lightmapsamplesize.</real>
+<boolean key="enforcesamplesize" name="Enforce Sample Size">Subdivide brushes/patches to honour the sample size.</boolean>
+<boolean key="castshadows" name="Cast Shadows">Cast shadows into the lightmap (default 1). Alias: cs.</boolean>
+<string key="modelgroup" name="Model Group">Bind misc_model entities with the same modelgroup to this entity.</string>
+<string key="decalgroup" name="Decal Group">Only decals with a matching decalgroup project onto these surfaces.</string>
+<real key="chamfer_convexwidth" name="Convex Chamfer Width">Per-entity convex-edge chamfer width.</real>
+<real key="chamfer_concavewidth" name="Concave Chamfer Width">Per-entity concave-edge chamfer width.</real>
+<boolean key="nosolid" name="Render Only">Render the brushes without collision. Also nonsolid / collisiontype none.</boolean>
+-------- NOTES --------
+collisiontype none (also nonsolid) is accepted by the compiler for render-only brushes; it has no editor widget.
+  </group>
+
+  <group name="func_trim" color="0 .5 .8">
+Compiler-only entity: its brush faces act as infinite cutting planes that slice misc_model meshes. The entity and its brushes are removed from the BSP.
+-------- KEYS --------
+<target key="target" name="Target">Only cut misc_model entities whose targetname matches. Leave blank to cut all models.</target>
+-------- NOTES --------
+Faces using nodraw / skip shaders are ignored as cutting planes.
+  </group>
+
+  <group name="func_terrain" color="0 .5 .8">
+Compiler-only terrain generator. Child brushes become invisible collision geometry while the visible terrain is generated from the keys below.
+-------- KEYS --------
+<texture key="shader" name="Terrain MetaShader">Metashader used to assign terrain textures.</texture>
+<texture key="alphamap" name="Terrain Blending Map">Art file guiding texture blending.</texture>
+<integer key="layers" name="Terrain Layers">Number of unique root shaders used by the terrain.</integer>
+  </group>
+
+  <point name="misc_decal" color=".22 .522 1" box="-4 -4 -4 4 4 4">
+Point decal projector that generates a quad and projects a shader onto nearby geometry.
+-------- KEYS --------
+<texture key="shader" name="Decal Shader">Shader to project (default textures/common/nodraw).</texture>
+<real key="width" name="Width">Quad width (default shader image size / 4 or 64).</real>
+<real key="height" name="Height">Quad height (default shader image size / 4 or 64).</real>
+<real key="scale" name="Scale">Proportional size multiplier (default 1).</real>
+<real key="distance" name="Projection Depth">Projection depth (default 64). Alias: depth.</real>
+<angles key="angles" name="Pitch Yaw Roll">Projection direction; pitch 90 points straight down.</angles>
+<angle key="angle" name="Yaw Angle">Yaw-only projection direction when angles is unset.</angle>
+<target key="target" name="Target">Aim target entity for the projection.</target>
+<real key="rotate" name="Rotation">Rotate the quad clockwise around the projection axis.</real>
+<string key="decalgroup" name="Decal Group">Only project onto receivers with a matching decalgroup.</string>
+<color key="vertexcolor" name="Vertex Color">Decal vertex color override. Alias: _color.</color>
+<real key="vertexalpha" name="Vertex Alpha">Decal opacity override.</real>
+-------- NOTES --------
+The default projection direction is +X.
+  </point>
+
+  <point name="misc_text_decal" color="0 .5 .8" box="-4 -4 -4 4 4 4">
+Point entity that generates text geometry from a TrueType font atlas.
+-------- KEYS --------
+<string key="text" name="Text">Text to render.</string>
+<texture key="font" name="Font Atlas">Font atlas descriptor (fallback keys: shader, texture).</texture>
+<real key="height" name="Glyph Height">Glyph height in world units (default 32). Alias: size.</real>
+<string key="align" name="Horizontal Align">left (default), center/middle, right.</string>
+<string key="valign" name="Vertical Align">baseline (default), top, center/middle, bottom.</string>
+<real key="tracking" name="Tracking">Inter-character spacing (default 0).</real>
+<real key="distance" name="Projection Depth">Projection depth (default 64). Alias: depth.</real>
+<angles key="angles" name="Pitch Yaw Roll">Projection direction.</angles>
+<angle key="angle" name="Yaw Angle">Yaw-only projection direction when angles is unset.</angle>
+<target key="target" name="Target">Aim target entity for the projection.</target>
+<real key="rotate" name="Rotation">Rotate the text clockwise around the projection axis.</real>
+<string key="decalgroup" name="Decal Group">Only project onto receivers with a matching decalgroup.</string>
+<color key="vertexcolor" name="Vertex Color">Vertex color override. Alias: _color.</color>
+<real key="vertexalpha" name="Vertex Alpha">Opacity override.</real>
+  </point>
+
+
+</classes>
