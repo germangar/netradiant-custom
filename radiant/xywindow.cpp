@@ -57,6 +57,7 @@
 #include "gtkutil/fbo.h"
 #include "gtkmisc.h"
 #include "select.h"
+#include "brush.h"
 #include "brushmanip.h"
 #include "selection.h"
 #include "entity.h"
@@ -863,14 +864,49 @@ public:
 	}
 };
 
+static bool contextMenu_hasSelectedBrush(){
+	bool found = false;
+	Scene_forEachSelectedBrush( [&found]( BrushInstance& ){
+		found = true;
+	} );
+	return found;
+}
+
+static QAction* contextMenu_addCommand( QMenu* menu, const char* label, const char* commandName ){
+	QAction* action = new QAction( label, menu );
+	QObject::connect( action, &QAction::triggered, [commandName](){
+		GlobalCommands_find( commandName ).m_callback();
+	} );
+	menu->addAction( action );
+	return action;
+}
+
+void XYWnd::constructContextMenu(){
+	m_mnuDrop = new QMenu( "" );
+//	m_mnuDrop->setTearOffEnabled( true ); // problematic mouse events override in torn off menu
+
+	QAction* makeDetail = contextMenu_addCommand( m_mnuDrop, "Make detail", "MakeDetail" );
+	QAction* makeStructural = contextMenu_addCommand( m_mnuDrop, "Make structural", "MakeStructural" );
+
+	QAction* brushCommandsSeparator = m_mnuDrop->addSeparator();
+	QObject::connect( m_mnuDrop, &QMenu::aboutToShow, [makeDetail, makeStructural, brushCommandsSeparator](){
+		const bool hasBrush = contextMenu_hasSelectedBrush();
+		makeDetail->setVisible( hasBrush );
+		makeStructural->setVisible( hasBrush );
+		brushCommandsSeparator->setVisible( hasBrush );
+	} );
+
+	QMenu* newEntityMenu = new EntityMenu( "New Entity" );
+	m_mnuDrop->addMenu( newEntityMenu );
+	QObject::connect( newEntityMenu, &QMenu::triggered, entitycreate_activated ); //will receive submenu actions too
+
+	EntityClassMenuInserter inserter( newEntityMenu );
+	GlobalEntityClassManager().forEach( inserter );
+}
+
 void XYWnd::OnContextMenu(){
 	if ( m_mnuDrop == 0 ) { // first time, load it up
-		m_mnuDrop = new EntityMenu( "" );
-//		m_mnuDrop->setTearOffEnabled( true ); // problematic mouse events override in torn off menu
-		QObject::connect( m_mnuDrop, &QMenu::triggered, entitycreate_activated ); //will receive submenu actions too
-
-		EntityClassMenuInserter inserter( m_mnuDrop );
-		GlobalEntityClassManager().forEach( inserter );
+		constructContextMenu();
 	}
 
 	g_entityCreationOffset = 0;
