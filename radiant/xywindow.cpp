@@ -62,7 +62,9 @@
 #include "selection.h"
 #include "entity.h"
 #include "camwindow.h"
+#include "filterbar.h"
 #include "mainframe.h"
+#include "map.h"
 #include "preferences.h"
 #include "commands.h"
 #include "feedback.h"
@@ -872,13 +874,22 @@ static bool contextMenu_hasSelectedBrush(){
 	return found;
 }
 
-static QAction* contextMenu_addCommand( QMenu* menu, const char* label, const char* commandName ){
+static bool contextMenu_hasShaderTarget(){
+	return Scene_countSelectedBrushes( GlobalSceneGraph() ) != 0 || !g_SelectedFaceInstances.empty();
+}
+
+template<typename Functor>
+static QAction* contextMenu_addAction( QMenu* menu, const char* label, const Functor& functor ){
 	QAction* action = new QAction( label, menu );
-	QObject::connect( action, &QAction::triggered, [commandName](){
-		GlobalCommands_find( commandName ).m_callback();
-	} );
+	QObject::connect( action, &QAction::triggered, functor );
 	menu->addAction( action );
 	return action;
+}
+
+static QAction* contextMenu_addCommand( QMenu* menu, const char* label, const char* commandName ){
+	return contextMenu_addAction( menu, label, [commandName](){
+		GlobalCommands_find( commandName ).m_callback();
+	} );
 }
 
 void XYWnd::constructContextMenu(){
@@ -887,13 +898,18 @@ void XYWnd::constructContextMenu(){
 
 	QAction* makeDetail = contextMenu_addCommand( m_mnuDrop, "Make detail", "MakeDetail" );
 	QAction* makeStructural = contextMenu_addCommand( m_mnuDrop, "Make structural", "MakeStructural" );
+	QAction* caulkSelection = contextMenu_addAction( m_mnuDrop, "Caulk selection", [](){
+		Select_SetShader_Undo( GetCaulkShader() );
+	} );
 
 	QAction* brushCommandsSeparator = m_mnuDrop->addSeparator();
-	QObject::connect( m_mnuDrop, &QMenu::aboutToShow, [makeDetail, makeStructural, brushCommandsSeparator](){
+	QObject::connect( m_mnuDrop, &QMenu::aboutToShow, [makeDetail, makeStructural, caulkSelection, brushCommandsSeparator](){
 		const bool hasBrush = contextMenu_hasSelectedBrush();
+		const bool hasShaderTarget = contextMenu_hasShaderTarget();
 		makeDetail->setVisible( hasBrush );
 		makeStructural->setVisible( hasBrush );
-		brushCommandsSeparator->setVisible( hasBrush );
+		caulkSelection->setVisible( hasShaderTarget );
+		brushCommandsSeparator->setVisible( hasBrush || hasShaderTarget );
 	} );
 
 	QMenu* newEntityMenu = new EntityMenu( "New Entity" );
