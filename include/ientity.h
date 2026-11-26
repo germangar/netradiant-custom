@@ -21,9 +21,13 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include "generic/constant.h"
 
+#include "math/vectorfwd.h"
 #include "string/string.h"
+#include "stringio.h"
 #include "scenelib.h"
 
 class EntityClass;
@@ -104,6 +108,33 @@ typedef Reference<scene::Node> NodeReference;
 namespace scene
 {
 typedef Stack<NodeReference> Path;
+}
+
+inline Entity* path_getEntity( const scene::Path& path ){
+	for ( std::size_t i = path.size(); i > 0; --i ) {
+		Entity* entity = Node_getEntity( path[i - 1].get() );
+		if ( entity != 0 ) {
+			return entity;
+		}
+	}
+	return 0;
+}
+
+inline bool path_getVertexColor( const scene::Path& path, Vector3& colour ){
+	Entity* entity = path_getEntity( path );
+	if ( entity == 0 || !string_parse_vector3( entity->getKeyValue( "vertexcolor" ), colour ) ) {
+		return false;
+	}
+
+	for ( int i = 0; i < 3; ++i ) {
+		if ( colour[i] < 0.f ) {
+			colour[i] = 0.f;
+		}
+		else if ( colour[i] > 1.f ) {
+			colour[i] = 1.f;
+		}
+	}
+	return true;
 }
 
 class Counter;

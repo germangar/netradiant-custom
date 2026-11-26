@@ -113,7 +113,7 @@ class ModuleObserver;
 class Shader
 {
 public:
-	virtual void addRenderable( const OpenGLRenderable& renderable, const Matrix4& modelview, const LightList* lights = 0 ) = 0;
+	virtual void addRenderable( const OpenGLRenderable& renderable, const Matrix4& modelview, const LightList* lights = 0, const Vector3* tint = 0 ) = 0;
 	virtual void incrementUsed() = 0;
 	virtual void decrementUsed() = 0;
 	virtual void attach( ModuleObserver& observer ) = 0;

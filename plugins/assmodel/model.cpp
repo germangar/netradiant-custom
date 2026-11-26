@@ -23,6 +23,7 @@
 
 #include "iarchive.h"
 #include "idatastream.h"
+#include "ientity.h"
 #include "imodel.h"
 #include "modelskin.h"
 
@@ -582,10 +583,22 @@ public:
 	void renderSolid( Renderer& renderer, const VolumeTest& volume ) const override {
 		m_lightList->evaluateLights();
 
+		Vector3 vertexColor;
+		const bool tinted = path_getVertexColor( path(), vertexColor );
+		if ( tinted ) {
+			renderer.SetColour( vertexColor );
+		}
+
 		render( renderer, volume, Instance::localToWorld() );
+
+		if ( tinted ) {
+			renderer.ClearColour();
+		}
 	}
 	void renderWireframe( Renderer& renderer, const VolumeTest& volume ) const override {
-		renderSolid( renderer, volume );
+		m_lightList->evaluateLights();
+
+		render( renderer, volume, Instance::localToWorld() );
 	}
 
 	void testSelect( Selector& selector, SelectionTest& test ) override {
