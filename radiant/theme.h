@@ -21,6 +21,9 @@
 
 #pragma once
 
+extern int g_GuiFontOffset;
+void gui_font_apply();
+
 void theme_construct_menu( class QMenu *menu );
 void theme_construct();
 void theme_registerGlobalPreference( class PreferenceSystem& preferences );

@@ -55,6 +55,7 @@
 #include <QGroupBox>
 #include <QCheckBox>
 #include <QHeaderView>
+#include <QSpinBox>
 
 
 void Global_constructPreferences( PreferencesPage& page ){
@@ -62,6 +63,11 @@ void Global_constructPreferences( PreferencesPage& page ){
 
 void Interface_constructPreferences( PreferencesPage& page ){
 	page.appendPathEntry( "Shader Editor Command", g_TextEditor_editorCommand, false );
+	auto *fontSize = page.appendSpinner( "Input widgets font size", g_GuiFontOffset, 0, 8 );
+	fontSize->setToolTip( "Point-size offset from the theme/default font. 0 keeps the theme size." );
+	if( auto *spin = qobject_cast<QSpinBox*>( fontSize ) ){
+		spin->setSuffix( " pt" );
+	}
 }
 
 /*!
@@ -772,6 +778,7 @@ void Preferences_Reset(){
 void PrefsDlg::PostModal( QDialog::DialogCode code ){
 	if ( code == QDialog::DialogCode::Accepted ) {
 		Preferences_Save();
+		gui_font_apply();
 		UpdateAllWindows();
 	}
 }

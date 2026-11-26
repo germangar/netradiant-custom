@@ -19,8 +19,12 @@
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <array>
 #include <QStyle>
 #include <QApplication>
+#include <QFont>
+#include <QFontInfo>
+#include <QScreen>
 #include <QMenu>
 #include <QActionGroup>
 #include <QFile>
@@ -45,6 +49,66 @@ enum class ETheme{
 };
 
 static ETheme s_theme = ETheme::Dark;
+int g_GuiFontOffset = 0;
+
+void gui_font_apply(){
+	struct FontClass
+	{
+		const char* name;
+		QFont baseFont;
+	};
+
+	static std::array<FontClass, 14> classes = {{
+		{ "QLabel", {} },
+		{ "QLineEdit", {} },
+		{ "QPlainTextEdit", {} },
+		{ "QTextEdit", {} },
+		{ "QTreeView", {} },
+		{ "QTreeWidget", {} },
+		{ "QListView", {} },
+		{ "QListWidget", {} },
+		{ "QTableView", {} },
+		{ "QTableWidget", {} },
+		{ "QComboBox", {} },
+		{ "QSpinBox", {} },
+		{ "QDoubleSpinBox", {} },
+		{ "QCheckBox", {} },
+	}};
+	static bool captured = false;
+	static bool applied = false;
+
+	if( g_GuiFontOffset == 0 ){
+		if( applied ){
+			for( const auto& fontClass : classes ){
+				qApp->setFont( fontClass.baseFont, fontClass.name );
+			}
+			applied = false;
+		}
+		return;
+	}
+
+	if( !captured ){
+		for( auto& fontClass : classes ){
+			fontClass.baseFont = qApp->font( fontClass.name );
+		}
+		captured = true;
+	}
+
+	for( const auto& fontClass : classes ){
+		QFont font = fontClass.baseFont;
+		qreal pointSize = QFontInfo( font ).pointSizeF();
+		if( pointSize <= 0.0 && font.pixelSize() > 0 ){
+			const QScreen* screen = qApp->primaryScreen();
+			const qreal dpi = screen? screen->logicalDotsPerInch() : 96.0;
+			pointSize = font.pixelSize() * 72.0 / dpi;
+		}
+		if( pointSize > 0.0 ){
+			font.setPointSizeF( qMax( 1.0, pointSize + g_GuiFontOffset ) );
+			qApp->setFont( font, fontClass.name );
+		}
+	}
+	applied = true;
+}
 
 QString load_qss( const char *filename ){
 	if( QFile file( QString( AppPath_get() ) + "themes/" + filename ); file.open( QIODevice::OpenModeFlag::ReadOnly ) )
@@ -176,6 +240,7 @@ void theme_set( ETheme theme ){
 		qApp->setStyleSheet( load_qss( "blenderlight.qss" ) );
 	}
 
+	gui_font_apply();
 	defaults.is1stThemeApplication = false;
 }
 
@@ -216,4 +281,5 @@ void theme_construct(){
 
 void theme_registerGlobalPreference( class PreferenceSystem& preferences ){
 	preferences.registerPreference( "GUITheme", makeIntStringImportCallback( ThemeImportCaller() ), makeIntStringExportCallback( ThemeExportCaller() ) );
+	preferences.registerPreference( "GUIFontOffset", IntImportStringCaller( g_GuiFontOffset ), IntExportStringCaller( g_GuiFontOffset ) );
 }
