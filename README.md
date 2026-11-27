@@ -8,7 +8,7 @@
 <ul>
 <li>Bundled <code>makebsp</code>/<code>makelight</code> with build-menu integration.</li>
 <li>Improved 3D camera RMB freelook and context-menu behavior.</li>
-<li>Added viewport actions: Make detail/structural, Caulk, Copy/Paste/Open shader.</li>
+<li>Added context menu actions: Make detail/structural, Caulk, Copy/Paste/Open shader.</li>
 <li>Added <code>vertexcolor</code> camera preview for supported entities.</li>
 <li>Added a Skip visibility filter.</li>
 <li>Added UI font scaling to preferences/Interface.</li>
