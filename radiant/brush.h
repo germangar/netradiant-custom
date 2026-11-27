@@ -40,6 +40,7 @@
 #include "irender.h"
 #include "imap.h"
 #include "ibrush.h"
+#include "ientity.h"
 #include "igl.h"
 #include "ifilter.h"
 #include "nameable.h"
@@ -3616,10 +3617,20 @@ public:
 
 		m_lightList->evaluateLights();
 
+		Vector3 vertexColor;
+		const bool tinted = path_getVertexColor( path(), vertexColor );
+		if ( tinted ) {
+			renderer.SetColour( vertexColor );
+		}
+
 		for ( const auto& fi : m_faceInstances )
 		{
 			renderer.setLights( fi.m_lights );
 			fi.render( renderer, volume, localToWorld );
+		}
+
+		if ( tinted ) {
+			renderer.ClearColour();
 		}
 
 		renderComponentsSelected( renderer, volume, localToWorld );

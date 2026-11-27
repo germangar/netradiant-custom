@@ -533,9 +533,11 @@ public:
 		const Matrix4* m_transform;
 		const OpenGLRenderable *m_renderable;
 		const RendererLight* m_light;
+		bool m_tinted;
+		Vector3 m_tint;
 
-		RenderTransform( const OpenGLRenderable& renderable, const Matrix4& transform, const RendererLight* light )
-			: m_transform( &transform ), m_renderable( &renderable ), m_light( light ){
+		RenderTransform( const OpenGLRenderable& renderable, const Matrix4& transform, const RendererLight* light, const Vector3* tint = 0 )
+			: m_transform( &transform ), m_renderable( &renderable ), m_light( light ), m_tinted( tint != 0 ), m_tint( tint != 0 ? *tint : Vector3( 1, 1, 1 ) ){
 		}
 	};
 
@@ -547,8 +549,8 @@ private:
 	Renderables m_renderables;
 
 public:
-	void addRenderable( const OpenGLRenderable& renderable, const Matrix4& modelview, const RendererLight* light = 0 ){
-		m_renderables.push_back( RenderTransform( renderable, modelview, light ) );
+	void addRenderable( const OpenGLRenderable& renderable, const Matrix4& modelview, const RendererLight* light = 0, const Vector3* tint = 0 ){
+		m_renderables.push_back( RenderTransform( renderable, modelview, light, tint ) );
 	}
 
 	OpenGLState& state(){
@@ -582,14 +584,15 @@ class OpenGLStateBucketAdd
 	OpenGLStateBucket& m_bucket;
 	const OpenGLRenderable& m_renderable;
 	const Matrix4& m_modelview;
+	const Vector3* m_tint;
 public:
 	using func = void(const RendererLight&);
 
-	OpenGLStateBucketAdd( OpenGLStateBucket& bucket, const OpenGLRenderable& renderable, const Matrix4& modelview ) :
-		m_bucket( bucket ), m_renderable( renderable ), m_modelview( modelview ){
+	OpenGLStateBucketAdd( OpenGLStateBucket& bucket, const OpenGLRenderable& renderable, const Matrix4& modelview, const Vector3* tint ) :
+		m_bucket( bucket ), m_renderable( renderable ), m_modelview( modelview ), m_tint( tint ){
 	}
 	void operator()( const RendererLight& light ){
-		m_bucket.addRenderable( m_renderable, m_modelview, &light );
+		m_bucket.addRenderable( m_renderable, m_modelview, &light, m_tint );
 	}
 };
 
@@ -633,7 +636,7 @@ public:
 		}
 		m_passes.clear();
 	}
-	void addRenderable( const OpenGLRenderable& renderable, const Matrix4& modelview, const LightList* lights ) override {
+	void addRenderable( const OpenGLRenderable& renderable, const Matrix4& modelview, const LightList* lights, const Vector3* tint ) override {
 		for ( auto *bucket : m_passes )
 		{
 #if LIGHT_SHADER_DEBUG
@@ -652,14 +655,14 @@ public:
 #else
 			if ( ( bucket->state().m_state & RENDER_BUMP ) != 0 ) {
 				if ( lights != 0 ) {
-					OpenGLStateBucketAdd add( *bucket, renderable, modelview );
+					OpenGLStateBucketAdd add( *bucket, renderable, modelview, tint );
 					lights->forEachLight( makeCallback( add ) );
 				}
 			}
 			else
 #endif
 			{
-				bucket->addRenderable( renderable, modelview );
+				bucket->addRenderable( renderable, modelview, 0, tint );
 			}
 		}
 	}
@@ -1543,6 +1546,8 @@ void OpenGLState_apply( const OpenGLState& self, OpenGLState& current, unsigned 
 
 void Renderables_flush( OpenGLStateBucket::Renderables& renderables, OpenGLState& current, unsigned int globalstate, const Vector3& viewer ){
 	const Matrix4* transform = 0;
+	const bool textured = ( globalstate & current.m_state & RENDER_TEXTURE ) != 0;
+	Vector3 lastColour( -1, -1, -1 );
 	gl().glPushMatrix();
 
 	if ( current.m_program != 0 && current.m_textureSkyBox != 0 && globalstate & RENDER_PROGRAM ) {
@@ -1604,6 +1609,19 @@ void Renderables_flush( OpenGLStateBucket::Renderables& renderables, OpenGLState
 				current.m_program->setParameters( viewer, *rend.m_transform, lightBounds.origin + rend.m_light->offset(), rend.m_light->colour(), world2light );
 				debug_string( "set lightBounds parameters" );
 			}
+		}
+
+		Vector3 colour = textured
+			? Vector3( 1, 1, 1 )
+			: Vector3( current.m_colour[0], current.m_colour[1], current.m_colour[2] );
+		if ( rend.m_tinted ) {
+			colour[0] *= rend.m_tint[0];
+			colour[1] *= rend.m_tint[1];
+			colour[2] *= rend.m_tint[2];
+		}
+		if ( colour != lastColour ) {
+			gl().glColor4f( colour[0], colour[1], colour[2], current.m_colour[3] );
+			lastColour = colour;
 		}
 
 		rend.m_renderable->render( current.m_state );

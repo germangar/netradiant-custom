@@ -34,6 +34,7 @@
 #include "ifilter.h"
 #include "imap.h"
 #include "ipatch.h"
+#include "ientity.h"
 #include "cullable.h"
 #include "renderable.h"
 #include "editable.h"
@@ -1470,7 +1471,18 @@ public:
 		m_patch.evaluateTransform();
 		renderer.setLights( *m_lightList );
 		renderer.Highlight( Renderer::ePrimitiveWire );
+
+		Vector3 vertexColor;
+		const bool tinted = path_getVertexColor( path(), vertexColor );
+		if ( tinted ) {
+			renderer.SetColour( vertexColor );
+		}
+
 		m_patch.render_solid( renderer, volume, localToWorld() );
+
+		if ( tinted ) {
+			renderer.ClearColour();
+		}
 
 		renderComponentsSelected( renderer, volume );
 	}

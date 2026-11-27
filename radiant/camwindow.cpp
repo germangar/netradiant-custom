@@ -1809,11 +1809,13 @@ class CamRenderer : public Renderer
 {
 	struct state_type
 	{
-		state_type() : m_highlight( 0 ), m_state( 0 ), m_lights( 0 ){
+		state_type() : m_highlight( 0 ), m_state( 0 ), m_lights( 0 ), m_colour( 1, 1, 1 ), m_tinted( false ){
 		}
 		unsigned int m_highlight;
 		Shader* m_state;
 		const LightList* m_lights;
+		Vector3 m_colour;
+		bool m_tinted;
 	};
 
 	std::vector<state_type> m_state_stack;
@@ -1861,6 +1863,16 @@ public:
 	void setLights( const LightList& lights ) override {
 		m_state_stack.back().m_lights = &lights;
 	}
+	void SetColour( const Vector3& colour ) override {
+		if ( ( m_globalstate & RENDER_FILL ) != 0 ) {
+			m_state_stack.back().m_colour = colour;
+			m_state_stack.back().m_tinted = true;
+		}
+	}
+	void ClearColour() override {
+		m_state_stack.back().m_colour = Vector3( 1, 1, 1 );
+		m_state_stack.back().m_tinted = false;
+	}
 	void addRenderable( const OpenGLRenderable& renderable, const Matrix4& world ) override {
 		if ( m_state_stack.back().m_highlight & ePrimitive ) {
 			m_state_select0->addRenderable( renderable, world, m_state_stack.back().m_lights );
@@ -1875,7 +1887,8 @@ public:
 			m_state_facewire->addRenderable( renderable, world, m_state_stack.back().m_lights );
 		}
 
-		m_state_stack.back().m_state->addRenderable( renderable, world, m_state_stack.back().m_lights );
+		const Vector3* tint = m_state_stack.back().m_tinted ? &m_state_stack.back().m_colour : 0;
+		m_state_stack.back().m_state->addRenderable( renderable, world, m_state_stack.back().m_lights, tint );
 	}
 
 	void render( const Matrix4& modelview, const Matrix4& projection ){
