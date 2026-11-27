@@ -11,6 +11,7 @@
 <li>Added viewport actions: Make detail/structural, Caulk, Copy/Paste/Open shader.</li>
 <li>Added <code>vertexcolor</code> camera preview for supported entities.</li>
 <li>Added a Skip visibility filter.</li>
+<li>Added global UI font scaling.</li>
 <li>Updated the Warfork-focused gamepack, packaging, and branding.</li>
 </ul>
 
