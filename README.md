@@ -1,5 +1,14 @@
-| **NetRadiant-make** — fork of NetRadiant-Custom, tailored for makebsp/makelight workflows.<br>**Changes:** Bundled `makebsp`/`makelight` + build menu · 3D RMB freelook/context menu · Viewport Make detail/structural, Caulk, Copy/Paste/Open shader · `vertexcolor` camera preview · Skip visibility filter · Warfork gamepack/packaging/branding |
-| :--- |
+<table>
+<tr>
+<td>
+
+<strong>NetRadiant-make</strong> — fork of NetRadiant-Custom, tailored for makebsp/makelight workflows.
+
+<strong>Changes:</strong> Bundled <code>makebsp</code>/<code>makelight</code> + build menu · 3D RMB freelook/context menu · Viewport Make detail/structural, Caulk, Copy/Paste/Open shader · <code>vertexcolor</code> camera preview · Skip visibility filter · Warfork gamepack/packaging/branding
+
+</td>
+</tr>
+</table>
 
 NetRadiant-custom
 =================
