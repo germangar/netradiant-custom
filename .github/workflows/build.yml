@@ -2,6 +2,9 @@ name: build
 
 on: [workflow_dispatch]
 
+env:
+  MAKEBSP_RELEASE: '0.8.5'
+
 jobs:
   windows-msys:
     name: ${{ matrix.config }} Windows ${{ matrix.arch }}
@@ -41,6 +44,14 @@ jobs:
     - name: Build
       run: |
         make MAKEFILE_CONF=msys2-Makefile.conf -j4
+
+    - name: Bundle makebsp
+      shell: bash
+      run: |
+        set -euo pipefail
+        curl -fsSLO "https://github.com/germangar/makebsp/releases/download/${MAKEBSP_RELEASE}/makebsp-windows-x64.zip"
+        7z x makebsp-windows-x64.zip -omakebsp-bundle
+        cp -r makebsp-bundle/makebsp/* install/
         mkdir -p install/settings
         7z a Windows-${{ matrix.arch }}.zip ./install/*
 #       zip immediately, since .bla files and empty folders get lost somewhere later otherwise
@@ -71,8 +82,23 @@ jobs:
     - name: Build
       run: |
         make CC=gcc-14 CXX=g++-14 CXXFLAGS="-Wno-deprecated-copy" -j4
+
+    - name: Bundle makebsp
+      shell: bash
+      run: |
+        set -euo pipefail
+        curl -fsSLO "https://github.com/germangar/makebsp/releases/download/${MAKEBSP_RELEASE}/makebsp-linux-x64.tar.gz"
+        mkdir -p makebsp-bundle
+        tar -xzf makebsp-linux-x64.tar.gz -C makebsp-bundle
+        cp -r makebsp-bundle/makebsp/makebspdata install/
+        cp -d makebsp-bundle/makebsp/libembree4.so* makebsp-bundle/makebsp/libtbb*.so* install/
+        cp makebsp-bundle/makebsp/makebsp.elf "install/makebsp.$(uname -m)"
+        cp makebsp-bundle/makebsp/makelight.elf "install/makelight.$(uname -m)"
+
+    - name: Package
+      run: |
         ./appimage.sh
-        7z a Linux-${{ matrix.arch }}.7z ./NetRadiant-Custom-x86_64.AppImage
+        7z a Linux-${{ matrix.arch }}.7z ./NetRadiant-Make-x86_64.AppImage
 #        7z a Linux-${{ matrix.arch }}.7z ./install/*
 #       7z to preserve file permissions
 
@@ -93,8 +119,8 @@ jobs:
       - name: Create binary archives
         shell: bash
         run: |
-          mv Windows-x86_64/Windows-x86_64.zip netradiant-custom-$(date +%Y%m%d)-windows-x86_64.zip
-          mv Linux-x86_64/Linux-x86_64.7z netradiant-custom-$(date +%Y%m%d)-linux-x86_64.7z
+          mv Windows-x86_64/Windows-x86_64.zip netradiant-make-$(date +%Y%m%d)-windows-x86_64.zip
+          mv Linux-x86_64/Linux-x86_64.7z netradiant-make-$(date +%Y%m%d)-linux-x86_64.7z
 #         note: 7z dir/* doesn't match .bla (hidden) file in linux under dir/ but matches in subfolders  # or doesn't match there now too?
 
       - name: Get current date

@@ -13,7 +13,7 @@ CFLAGS             ?=
 CXXFLAGS           ?=
 CPPFLAGS           ?=
 LIBS               ?=
-RADIANT_ABOUTMSG   ?= Custom build
+RADIANT_ABOUTMSG   ?= NetRadiant-make is a fork of NetRadiant-Custom, tailored for makebsp/makelight workflows.
 
 # warning: this directory may NOT contain any files other than the ones written by this Makefile!
 # NEVER SET THIS TO A SYSTEM WIDE "bin" DIRECTORY!
