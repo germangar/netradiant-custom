@@ -202,6 +202,7 @@ private:
 	Timer m_render_time;
 
 public:
+	void constructContextMenu();
 	void OnContextMenu();
 	void ButtonState_onMouseDown( unsigned int buttons ){
 		//m_buttonstate |= buttons;

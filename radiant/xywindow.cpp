@@ -57,11 +57,14 @@
 #include "gtkutil/fbo.h"
 #include "gtkmisc.h"
 #include "select.h"
+#include "brush.h"
 #include "brushmanip.h"
 #include "selection.h"
 #include "entity.h"
 #include "camwindow.h"
+#include "filterbar.h"
 #include "mainframe.h"
+#include "map.h"
 #include "preferences.h"
 #include "commands.h"
 #include "feedback.h"
@@ -863,14 +866,63 @@ public:
 	}
 };
 
+static bool contextMenu_hasSelectedBrush(){
+	bool found = false;
+	Scene_forEachSelectedBrush( [&found]( BrushInstance& ){
+		found = true;
+	} );
+	return found;
+}
+
+static bool contextMenu_hasShaderTarget(){
+	return Scene_countSelectedBrushes( GlobalSceneGraph() ) != 0 || !g_SelectedFaceInstances.empty();
+}
+
+template<typename Functor>
+static QAction* contextMenu_addAction( QMenu* menu, const char* label, const Functor& functor ){
+	QAction* action = new QAction( label, menu );
+	QObject::connect( action, &QAction::triggered, functor );
+	menu->addAction( action );
+	return action;
+}
+
+static QAction* contextMenu_addCommand( QMenu* menu, const char* label, const char* commandName ){
+	return contextMenu_addAction( menu, label, [commandName](){
+		GlobalCommands_find( commandName ).m_callback();
+	} );
+}
+
+void XYWnd::constructContextMenu(){
+	m_mnuDrop = new QMenu( "" );
+//	m_mnuDrop->setTearOffEnabled( true ); // problematic mouse events override in torn off menu
+
+	QAction* makeDetail = contextMenu_addCommand( m_mnuDrop, "Make detail", "MakeDetail" );
+	QAction* makeStructural = contextMenu_addCommand( m_mnuDrop, "Make structural", "MakeStructural" );
+	QAction* caulkSelection = contextMenu_addAction( m_mnuDrop, "Caulk selection", [](){
+		Select_SetShader_Undo( GetCaulkShader() );
+	} );
+
+	QAction* brushCommandsSeparator = m_mnuDrop->addSeparator();
+	QObject::connect( m_mnuDrop, &QMenu::aboutToShow, [makeDetail, makeStructural, caulkSelection, brushCommandsSeparator](){
+		const bool hasBrush = contextMenu_hasSelectedBrush();
+		const bool hasShaderTarget = contextMenu_hasShaderTarget();
+		makeDetail->setVisible( hasBrush );
+		makeStructural->setVisible( hasBrush );
+		caulkSelection->setVisible( hasShaderTarget );
+		brushCommandsSeparator->setVisible( hasBrush || hasShaderTarget );
+	} );
+
+	QMenu* newEntityMenu = new EntityMenu( "New Entity" );
+	m_mnuDrop->addMenu( newEntityMenu );
+	QObject::connect( newEntityMenu, &QMenu::triggered, entitycreate_activated ); //will receive submenu actions too
+
+	EntityClassMenuInserter inserter( newEntityMenu );
+	GlobalEntityClassManager().forEach( inserter );
+}
+
 void XYWnd::OnContextMenu(){
 	if ( m_mnuDrop == 0 ) { // first time, load it up
-		m_mnuDrop = new EntityMenu( "" );
-//		m_mnuDrop->setTearOffEnabled( true ); // problematic mouse events override in torn off menu
-		QObject::connect( m_mnuDrop, &QMenu::triggered, entitycreate_activated ); //will receive submenu actions too
-
-		EntityClassMenuInserter inserter( m_mnuDrop );
-		GlobalEntityClassManager().forEach( inserter );
+		constructContextMenu();
 	}
 
 	g_entityCreationOffset = 0;
