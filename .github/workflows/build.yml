@@ -31,7 +31,7 @@ jobs:
         msystem: ${{ matrix.msystem }}
         path-type: minimal
         release: false
-        update: false
+        update: true
 
     - uses: actions/checkout@v4
       with:
