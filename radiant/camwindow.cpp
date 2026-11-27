@@ -1162,9 +1162,15 @@ static void activate_rmb_pending( const QPoint& pos, CamWnd& camwnd ){
 static void disable_freelook_button_release( const QMouseEvent& event, CamWnd& camwnd ){
 	if ( rmb_camera_event( event ) ) {
 		camwnd.getCamera().m_orbit = false;
-		const bool quickClick = camwnd.m_rightClickTimer.elapsed_msec() < 250 && camwnd.m_rightClickMove < 56;
-		if( quickClick == !camwnd.m_bFreeMove_entering )
+		const int elapsed = camwnd.m_rightClickTimer.elapsed_msec();
+		const bool quickClick = elapsed < 250 && camwnd.m_rightClickMove < 56;
+		if( quickClick == !camwnd.m_bFreeMove_entering ){
 			camwnd.DisableFreeMove();
+		}
+		else if( !camwnd.m_bFreeMove_entering && M2_EVENT( event ) && elapsed >= 250 ){
+			camwnd.DisableFreeMove();
+			context_menu_show();
+		}
 	}
 }
 
@@ -1624,6 +1630,11 @@ protected:
 		}
 		else{
 			selection_button_press_freemove( this, scaledEvent( event ), m_camwnd.m_window_observer );
+			if( rmb_camera_event( *event ) ){
+				m_camwnd.m_bFreeMove_entering = false;
+				m_camwnd.m_rightClickTimer.start();
+				m_camwnd.m_rightClickMove = 0;
+			}
 		}
 	}
 	void mouseMoveEvent( QMouseEvent *event ) override {

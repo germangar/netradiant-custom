@@ -58,6 +58,11 @@
 #include "gtkmisc.h"
 #include "select.h"
 #include "brush.h"
+#include "patch.h"
+#include "surfacedialog.h"
+#include "texwindow.h"
+#include "gtkdlgs.h"
+#include "ishaders.h"
 #include "brushmanip.h"
 #include "selection.h"
 #include "entity.h"
@@ -878,6 +883,39 @@ static bool contextMenu_hasShaderTarget(){
 	return Scene_countSelectedBrushes( GlobalSceneGraph() ) != 0 || !g_SelectedFaceInstances.empty();
 }
 
+static bool contextMenu_hasSingleSelectedShader(){
+	CopiedString found;
+	bool has = false;
+	bool multiple = false;
+	if( !g_SelectedFaceInstances.empty() ){
+		g_SelectedFaceInstances.foreach( [&]( FaceInstance& fi ){
+			if( multiple )
+				return;
+			const char* shader = fi.getFace().getShader().getShader();
+			if( !has ){
+				found = shader;
+				has = true;
+			}
+			else if( !string_equal( found.c_str(), shader ) ){
+				multiple = true;
+			}
+		} );
+	}
+	Scene_forEachSelectedPatch( [&]( PatchInstance& patch ){
+		if( multiple )
+			return;
+		const char* shader = patch.getPatch().GetShader();
+		if( !has ){
+			found = shader;
+			has = true;
+		}
+		else if( !string_equal( found.c_str(), shader ) ){
+			multiple = true;
+		}
+	} );
+	return has && !multiple;
+}
+
 template<typename Functor>
 static QAction* contextMenu_addAction( QMenu* menu, const char* label, const Functor& functor ){
 	QAction* action = new QAction( label, menu );
@@ -901,14 +939,42 @@ void XYWnd::constructContextMenu(){
 	QAction* caulkSelection = contextMenu_addAction( m_mnuDrop, "Caulk selection", [](){
 		Select_SetShader_Undo( GetCaulkShader() );
 	} );
+	QAction* copyTexture = contextMenu_addAction( m_mnuDrop, "Copy texture", [](){
+		SelectedFaces_copyTexture();
+	} );
+	QAction* pasteTexture = contextMenu_addAction( m_mnuDrop, "Paste texture", [](){
+		Select_SetShader_Undo( TextureBrowser_GetSelectedShader() );
+	} );
+	QAction* openShader = contextMenu_addAction( m_mnuDrop, "Open shader", [](){
+		const char* shader = nullptr;
+		if( !g_SelectedFaceInstances.empty() ){
+			shader = g_SelectedFaceInstances.last().getFace().getShader().getShader();
+		}
+		else{
+			Patch* patch = nullptr;
+			Scene_forEachSelectedPatch( [&patch]( PatchInstance& p ){ if( !patch ) patch = &p.getPatch(); } );
+			if( patch )
+				shader = patch->GetShader();
+		}
+		if( shader && *shader ){
+			IShader* ishader = QERApp_Shader_ForName( shader );
+			if( !ishader->IsDefault() )
+				DoShaderView( ishader->getShaderFileName(), ishader->getName(), false );
+			ishader->DecRef();
+		}
+	} );
 
 	QAction* brushCommandsSeparator = m_mnuDrop->addSeparator();
-	QObject::connect( m_mnuDrop, &QMenu::aboutToShow, [makeDetail, makeStructural, caulkSelection, brushCommandsSeparator](){
+	QObject::connect( m_mnuDrop, &QMenu::aboutToShow, [makeDetail, makeStructural, caulkSelection, copyTexture, pasteTexture, openShader, brushCommandsSeparator](){
 		const bool hasBrush = contextMenu_hasSelectedBrush();
 		const bool hasShaderTarget = contextMenu_hasShaderTarget();
+		const bool hasSingleShader = contextMenu_hasSingleSelectedShader();
 		makeDetail->setVisible( hasBrush );
 		makeStructural->setVisible( hasBrush );
 		caulkSelection->setVisible( hasShaderTarget );
+		copyTexture->setVisible( hasShaderTarget );
+		pasteTexture->setVisible( hasShaderTarget );
+		openShader->setVisible( hasSingleShader );
 		brushCommandsSeparator->setVisible( hasBrush || hasShaderTarget );
 	} );
 
