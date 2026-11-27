@@ -97,6 +97,7 @@ jobs:
 
     - name: Package
       run: |
+        export LD_LIBRARY_PATH="$PWD/install${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
         ./appimage.sh
         7z a Linux-${{ matrix.arch }}.7z ./NetRadiant-Make-x86_64.AppImage
 #        7z a Linux-${{ matrix.arch }}.7z ./install/*
