@@ -43,6 +43,8 @@
 #include <QToolButton>
 #include <QGroupBox>
 #include <QCheckBox>
+#include <QApplication>
+#include <QClipboard>
 
 #include "signal/isignal.h"
 #include "math/vector.h"
@@ -1709,7 +1711,19 @@ void SelectedFaces_copyTexture(){
 		face.GetTexdef( g_faceTextureClipboard.m_projection );
 		g_faceTextureClipboard.m_flags = face.getShader().m_flags;
 
-		TextureBrowser_SetSelectedShader( face.getShader().getShader() );
+		const char* shader = face.getShader().getShader();
+		TextureBrowser_SetSelectedShader( shader );
+		QApplication::clipboard()->setText( shader );
+	}
+	else{
+		Patch* patch = nullptr;
+		Scene_forEachSelectedPatch( [&patch]( PatchInstance& p ){ if( !patch ) patch = &p.getPatch(); } );
+		if( patch ){
+			CopiedString shader;
+			Patch_getTexture( *patch, shader, g_faceTextureClipboard );
+			TextureBrowser_SetSelectedShader( shader.c_str() );
+			QApplication::clipboard()->setText( shader.c_str() );
+		}
 	}
 }
 
