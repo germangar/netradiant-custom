@@ -660,6 +660,7 @@ filter_patch_shader g_filter_patch_fullclip( "textures/common/fullclip" );
 filter_patch_shader g_filter_patch_commonclip( "textures/common/clip" );
 filter_patch_shader g_filter_patch_botclip( "textures/common/botclip" );
 filter_patch_shader g_filter_patch_donotenter( "textures/common/donotenter" );
+filter_patch_flags g_filter_patch_skip( QER_SKIP );
 filter_patch_flags g_filter_patch_translucent( QER_TRANS | QER_ALPHATEST );
 
 void PatchFilters_construct(){
@@ -671,6 +672,7 @@ void PatchFilters_construct(){
 	add_patch_filter( g_filter_patch_commonclip, EXCLUDE_CLIP );
 	add_patch_filter( g_filter_patch_botclip, EXCLUDE_BOTCLIP );
 	add_patch_filter( g_filter_patch_donotenter, EXCLUDE_BOTCLIP );
+	add_patch_filter( g_filter_patch_skip, EXCLUDE_SKIP );
 	add_patch_filter( g_filter_patch_translucent, EXCLUDE_TRANSLUCENT );
 }
 
