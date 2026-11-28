@@ -1486,7 +1486,7 @@ void ShaderHighlighter::highlightBlock( const QString &text )
 				for( int i = 1; i <= match.lastCapturedIndex(); ++i ){
 					if( !rule.colors[i - 1].isValid() ){ // c_colorColor3f
 						Vector3 clr( 0 );
-						string_parse_vector3( match.captured( i ).toLatin1().constData(), clr );
+						string_parse_colour( match.captured( i ).toLatin1().constData(), clr );
 						if( const auto max = vector3_max_component( clr ); max > 0 ) // normalise color
 							clr /= max;
 						QTextCharFormat format;

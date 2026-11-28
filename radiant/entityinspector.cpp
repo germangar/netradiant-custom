@@ -263,7 +263,7 @@ public:
 	typedef MemberCaller<ColorAttribute, void(), &ColorAttribute::update> UpdateCaller;
 	void browse(){
 		Vector3 color( 1, 1, 1 );
-		string_parse_vector3( m_entry->text().toLatin1().constData(), color );
+		string_parse_colour( m_entry->text().toLatin1().constData(), color );
 		if( color_dialog( m_entry->window(), color ) ){
 			char buffer[64];
 			sprintf( buffer, "%g %g %g", color[0], color[1], color[2] );

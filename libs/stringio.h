@@ -23,6 +23,8 @@
 
 #include <cstdlib>
 #include <cctype>
+#include <cstdio>
+#include <algorithm>
 
 #include "generic/vector.h"
 #include "iscriplib.h"
@@ -180,6 +182,47 @@ inline bool string_parse_vector3( const char* string, BasicVector3<Element>& v )
 	}
 	v[2] = float( buffer_parse_floating_literal( string ) );
 	return string_empty( string );
+}
+
+// makebsp-compatible colour parser. Returns channels in the 0..1 range.
+// Supports "#RRGGBB", "R G B" in 0..1 and "R G B" in 0..255.
+// Hex colours and any RGB value with a channel > 1.0001 are treated as 0..255.
+inline bool string_parse_colour( const char* string, Vector3& colour ){
+	if ( string_empty( string ) ) {
+		return false;
+	}
+
+	float red, green, blue;
+	bool scale255 = false;
+
+	if ( string[0] == '#' ) {
+		unsigned int r, g, b;
+		if ( std::sscanf( string + 1, "%02x%02x%02x", &r, &g, &b ) != 3 ) {
+			return false;
+		}
+		red = static_cast<float>( r );
+		green = static_cast<float>( g );
+		blue = static_cast<float>( b );
+		scale255 = true;
+	}
+	else
+	{
+		if ( std::sscanf( string, "%f %f %f", &red, &green, &blue ) != 3 ) {
+			return false;
+		}
+		scale255 = red > 1.0001f || green > 1.0001f || blue > 1.0001f;
+	}
+
+	if ( scale255 ) {
+		red = std::clamp( red, 0.0f, 255.0f ) / 255.0f;
+		green = std::clamp( green, 0.0f, 255.0f ) / 255.0f;
+		blue = std::clamp( blue, 0.0f, 255.0f ) / 255.0f;
+	}
+
+	colour = Vector3( std::clamp( red, 0.0f, 1.0f ),
+	                  std::clamp( green, 0.0f, 1.0f ),
+	                  std::clamp( blue, 0.0f, 1.0f ) );
+	return true;
 }
 
 template<typename Float>

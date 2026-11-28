@@ -120,9 +120,19 @@ inline Entity* path_getEntity( const scene::Path& path ){
 	return 0;
 }
 
+inline const char* Entity_getColourValue( const Entity& entity ){
+	if ( entity.hasKeyValue( "_color" ) ) {
+		return entity.getKeyValue( "_color" );
+	}
+	if ( entity.hasKeyValue( "color" ) ) {
+		return entity.getKeyValue( "color" );
+	}
+	return "";
+}
+
 inline bool path_getVertexColor( const scene::Path& path, Vector3& colour ){
 	Entity* entity = path_getEntity( path );
-	if ( entity == 0 || !string_parse_vector3( entity->getKeyValue( "vertexcolor" ), colour ) ) {
+	if ( entity == 0 || !string_parse_colour( entity->getKeyValue( "vertexcolor" ), colour ) ) {
 		return false;
 	}
 

@@ -24,7 +24,7 @@
 ///
 /// This entity dislays a special 'light' model.
 /// The "origin" key directly controls the position of the light model in local space.
-/// The "_color" key controls the colour of the light model.
+/// The "_color" key controls the colour of the light model, with "color" as a fallback when "_color" is absent.
 /// The "light" key is visualised with a sphere representing the approximate coverage of the light (except Doom3).
 /// Doom3 special behaviour:
 /// The entity behaves as a group.
@@ -1127,6 +1127,11 @@ class Light :
 	Callback<void()> m_boundsChanged;
 	Callback<void()> m_evaluateTransform;
 
+	void colourChanged( const char* ){
+		m_colour.colourChanged( Entity_getColourValue( m_entity ) );
+	}
+	typedef MemberCaller<Light, void(const char*), &Light::colourChanged> ColourChangedCaller;
+
 	void construct(){
 		default_rotation( m_rotation );
 		//m_aabb_light.origin = Vector3( 0, 0, 0 );
@@ -1134,7 +1139,8 @@ class Light :
 
 		m_keyObservers.insert( "classname", ClassnameFilter::ClassnameChangedCaller( m_filter ) );
 		m_keyObservers.insert( Static<KeyIsName>::instance().m_nameKey, NamedEntity::IdentifierChangedCaller( m_named ) );
-		m_keyObservers.insert( "_color", Colour::ColourChangedCaller( m_colour ) );
+		m_keyObservers.insert( "_color", ColourChangedCaller( *this ) );
+		m_keyObservers.insert( "color", ColourChangedCaller( *this ) );
 		m_keyObservers.insert( "origin", OriginKey::OriginChangedCaller( m_originKey ) );
 		m_keyObservers.insert( "_light", LightRadii::PrimaryIntensityChangedCaller( m_radii ) );
 		m_keyObservers.insert( "light", LightRadii::SecondaryIntensityChangedCaller( m_radii ) );

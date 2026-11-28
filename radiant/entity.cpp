@@ -526,7 +526,7 @@ void Entity_normalizeColor(){
 			const char* strColor = entity->getKeyValue( key );
 			if ( !string_empty( strColor ) ) {
 				Vector3 rgb;
-				if ( string_parse_vector3( strColor, rgb ) ) {
+				if ( string_parse_colour( strColor, rgb ) ) {
 					g_entity_globals.color_entity = rgb;
 					NormalizeColor( g_entity_globals.color_entity );
 
@@ -559,7 +559,7 @@ void Entity_setColour(){
 			const char* strColor = entity->getKeyValue( key );
 			if ( !string_empty( strColor ) ) {
 				Vector3 rgb;
-				if ( string_parse_vector3( strColor, rgb ) ) {
+				if ( string_parse_colour( strColor, rgb ) ) {
 					g_entity_globals.color_entity = rgb;
 				}
 			}

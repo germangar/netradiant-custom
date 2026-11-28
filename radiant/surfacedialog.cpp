@@ -1512,7 +1512,7 @@ typedef Function<void(Patch&, const char*, const FaceTexture&, EPasteMode, bool)
 
 #include "ientity.h"
 void Light_getTexture( Entity& entity, CopiedString& shader, FaceTexture& clipboard ){
-	string_parse_vector3( entity.getKeyValue( "_color" ), clipboard.m_colour );
+	string_parse_colour( Entity_getColourValue( entity ), clipboard.m_colour );
 	if( !string_parse_float( entity.getKeyValue( "_light" ), clipboard.m_light ) )
 		string_parse_float( entity.getKeyValue( "light" ), clipboard.m_light );
 

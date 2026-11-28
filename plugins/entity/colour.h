@@ -33,12 +33,12 @@ inline void default_colour( Vector3& colour ){
 	colour = Vector3( 1, 1, 1 );
 }
 inline void read_colour( Vector3& colour, const char* value ){
-	if ( !string_parse_vector3( value, colour ) ) {
+	if ( !string_parse_colour( value, colour ) ) {
 		default_colour( colour );
 	}
 }
 inline void read_colour_normalized( Vector3& colour, const char* value ){
-	if ( !string_parse_vector3( value, colour ) ) {
+	if ( !string_parse_colour( value, colour ) ) {
 		default_colour( colour );
 	}
 	else{
