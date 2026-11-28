@@ -23,6 +23,8 @@
 
 #include "math/vectorfwd.h"
 
+#include <string>
+
 void Entity_createFromSelection( const char* name, const Vector3& origin );
 
 void Scene_EntitySetKeyValue_Selected( const char* key, const char* value );
@@ -31,6 +33,7 @@ void Scene_EntitySetClassname_Selected( const char* classname );
 
 const char* misc_model_dialog( class QWidget* parent, const char* filepath = "" );
 void Entity_setColour();
+std::string EntityInspector_selectedColorKey();
 
 void Entity_constructMenu( class QMenu* menu );
 

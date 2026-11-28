@@ -552,7 +552,9 @@ void Entity_setColour(){
 		}
 
 		if ( entity != 0 ) {
-			const char* strColor = entity->getKeyValue( "_color" );
+			const std::string selectedKey = EntityInspector_selectedColorKey();
+			const char* key = selectedKey.empty() ? "_color" : selectedKey.c_str();
+			const char* strColor = entity->getKeyValue( key );
 			if ( !string_empty( strColor ) ) {
 				Vector3 rgb;
 				if ( string_parse_vector3( strColor, rgb ) ) {
@@ -567,7 +569,7 @@ void Entity_setColour(){
 
 				const auto command = StringStream<64>( "entitySetColour ", buffer );
 				UndoableCommand undo( command );
-				Scene_EntitySetKeyValue_Selected( "_color", buffer );
+				Scene_EntitySetKeyValue_Selected( key, buffer );
 			}
 		}
 	}

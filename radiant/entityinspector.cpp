@@ -1053,6 +1053,23 @@ void EntityInspector_updateKeyValues(){
 	}
 }
 
+std::string EntityInspector_selectedColorKey(){
+	if ( !g_entityInspector_windowConstructed || g_entprops_store == nullptr || !g_entprops_store->hasFocus() ) {
+		return {};
+	}
+
+	const QTreeWidgetItem* item = g_entprops_store->currentItem();
+	if ( item == nullptr ) {
+		return {};
+	}
+
+	const auto key = item->text( 0 ).toLatin1();
+	if ( string_in_string_nocase( key.constData(), "color" ) == nullptr ) {
+		return {};
+	}
+	return std::string( key.constData() );
+}
+
 class EntityInspectorDraw
 {
 	IdleDraw m_idleDraw;
